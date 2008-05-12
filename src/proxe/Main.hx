@@ -4,23 +4,26 @@ import flash.MovieClip;
 
 class Main extends Canvas {
     
-    public function draw():Void {
-        background();
+    var boxX:Int;
+    
+    public function new() {
+        super();
         
+        boxX = 50;
+    }
+    
+    public function draw():Void {
         fill(200, 100, 100);
         rect([50, 50], [100, 100]);
         
         fill(100, 100, 200, 100);
-        rect([80, 80], [130, 130]);
-    }
-
-    private function background():Void {
-        fill(255, 255, 255);
-        rect([0, 0], [width, height]);
+        rect([80, 80], [130, boxX]);
+        
+        boxX++;
     }
 
     static function main() : Void {
         var m = new Main();
-        m.draw();
+        //m.start();
     }
 }

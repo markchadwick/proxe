@@ -1,6 +1,19 @@
 package proxe;
 
-class Canvas {
+import flash.display.Sprite;
+
+import proxe.graphics.Graphics;
+import proxe.graphics.FlashGraphics;
+
+
+class Canvas extends flash.display.Sprite {
+    ////////////////////////////////////////////////////////////////////////////
+    // Fields
+    private var graphics:FlashGraphics;
+    
+    private var fillColor:Int;
+    private var strokeColor:Int;
+    
     ////////////////////////////////////////////////////////////////////////////
     // Constructor
     
@@ -9,10 +22,70 @@ class Canvas {
      * TODO: Take a renderer
      */
     public function new() {
+        graphics = new FlashGraphics();
+        
+        fillColor = resolveColor(128);
+        strokeColor = resolveColor(0);
+        
+        this.addEventListener(Event.ENTER_FRAME, draw);
+        
+    }
+
+    public function start() {
+        //draw();
+    }
+
+    public function draw() {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    // Utility Color Methods
+    // Drawing Methods
+    
+    public function rect(topLeft:Array<Int>, bottomRight:Array<Int>) : Void {
+        graphics.beginShape(fillColor, strokeColor);
+        
+        graphics.vertex(topLeft[0],     topLeft[1]);
+        graphics.vertex(bottomRight[0], topLeft[1]);
+        graphics.vertex(bottomRight[0], bottomRight[1]);
+        graphics.vertex(topLeft[0],     bottomRight[1]);
+        
+        graphics.endShape();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Color Methods
+    
+    public function fill(r:Int, ?g:Int, ?b:Int, ?a:Int) : Void {
+        fillColor = resolveColor(r, g, b, a);
+    }
+    
+    /**
+     * Red channel component of a packed color integer
+     */
+    public function red(r:Int) : Int {
+        return graphics.red(r);
+    }
+    
+    /**
+     * Green channel component of a packed color integer
+     */
+    public function green(g:Int) : Int {
+        return graphics.green(g);
+    }
+    
+    /**
+     * Blue channel component of a packed color integer
+     */
+    public function blue(b:Int) : Int {
+        return graphics.blue(b);
+    }
+    
+    /**
+     * Alpha channel component of a packed color integer
+     */
+    public function alpha(a:Int) : Int {
+        return graphics.alpha(a);
+    }
     
     /**
      * Takes four integers from 0-255, and packs them into a single integer.

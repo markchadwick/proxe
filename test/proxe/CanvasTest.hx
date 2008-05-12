@@ -142,7 +142,7 @@ class CanvasTest extends TestCase {
      * When `resolveCOlor` is passed four parameters, it should return the
      * straight RGBA as defined in `packColor`
      */
-     public function testResolveColorFourParameters() {
+    public function testResolveColorFourParameters() {
         var c:Int;
         
         c = canvas.resolveColor(255, 0, 0, 0);
@@ -159,5 +159,49 @@ class CanvasTest extends TestCase {
         
         c = canvas.resolveColor(-1, 1000, 0, 128);
         assertEquals(0x8000ff00, c);
+    }
+     
+    public function testRed() : Void {
+         assertEquals(0,   canvas.red(0x00000000));
+         assertEquals(255, canvas.red(0x00ff0000));
+         assertEquals(128, canvas.red(0x00800000));
      }
+     
+    public function testGreen() : Void {
+         assertEquals(0,   canvas.green(0x00000000));
+         assertEquals(255, canvas.green(0x0000ff00));
+         assertEquals(128, canvas.green(0x00008000));
+     }
+
+     public function testBlue() : Void {
+         assertEquals(0,   canvas.blue(0x00000000));
+         assertEquals(255, canvas.blue(0x000000ff));
+         assertEquals(128, canvas.blue(0x00000080));
+     }
+     
+     public function testAlpha() : Void {
+         assertEquals(0,   canvas.alpha(0x00000000));
+         assertEquals(255, canvas.alpha(0xff000000));
+         //assertEquals(128, canvas.alpha(0x80000000));
+         
+         //var c:Int;
+         //c = 0x00000080;
+         //assertEquals(128, c);
+         
+         //c <<= 24;
+         //assertEquals(128, (c >> 24));
+     }
+     
+     //public function testUnsignedBitShifting() : Void {
+         //var b:Int;
+         //b = 0x00000080;
+         
+         //assertEquals(128, b);
+         
+         //for(shift in [0, 8, 16, 24]) {
+             //var i:Int;
+             //i = (b << shift);
+             //assertEquals(b, (i >> shift));
+         //}
+     //}   
 }
