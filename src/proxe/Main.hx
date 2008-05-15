@@ -13,6 +13,8 @@ class Box {
     var xVel:Float;
     var yVel:Float;
     
+    var fill:Color;
+    
     public function new(canvas:Canvas) {
         this.canvas = canvas;
         
@@ -24,6 +26,8 @@ class Box {
         
         xVel = 1 + Math.random() * 6;
         yVel = 1 + Math.random() * 6;
+        
+        fill = Color.resolve(100, 100);
     }
     
     public function draw() {
@@ -38,7 +42,7 @@ class Box {
         x += xVel;
         y += yVel;
         
-        canvas.fill(200, 100, 100, 100);
+        canvas.fill(fill.red, fill.green, fill.blue, fill.alpha);
         canvas.rect([x, y], [this.width, this.height]);
     }
 }

@@ -62,4 +62,8 @@ class Color {
         }
         return new Color(r, g, b, a);
     }
+    
+    public function toString() : String {
+        return "<Color: r:"+ red +" g:"+ green +" b:"+ blue +" a:"+ alpha +">";
+    }
 }

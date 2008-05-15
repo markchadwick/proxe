@@ -25,6 +25,7 @@ class FlashGraphics extends Graphics {
     
     /**
      * TODO: closures would be perfect here for restoring state variables
+     * TODO: Actual Width and Height
      */
     public function background(backgroundColor:Color) {
         graphics.clear();
@@ -32,14 +33,20 @@ class FlashGraphics extends Graphics {
         var origFillColor:Color = this.fillColor;
         var origStrokeColor:Color = this.strokeColor;
         
+        strokeColor = Color.NONE;
         fillColor = backgroundColor;
-        rect(0, 0, 400, 300);
+        rect(-1, -1, 401, 301);
         
         fillColor = origFillColor;
         strokeColor = origStrokeColor;
     }
     
     public function rect(x:Float, y:Float, width:Float, height:Float) {
+        //if(strokeColor != Color.NONE) {
+            //trace("no Stroke!");
+            //graphics.lineStyle(strokeWeight, rgb(strokeColor), alpha(strokeColor));
+        //}
+        
         graphics.lineStyle(1, 0x000000);
         graphics.beginFill(rgb(fillColor), alpha(fillColor));
         graphics.drawRect(x, y, width, height);
