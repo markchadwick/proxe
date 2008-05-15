@@ -1,29 +1,68 @@
 package proxe;
 
-import flash.MovieClip;
-
-class Main extends Canvas {
+class Box {
+    var canvas:Canvas;
     
-    var boxX:Int;
+    public var color:proxe.Color;
     
-    public function new() {
-        super();
+    var x:Float;
+    var y:Float;
+    var width:Float;
+    var height:Float;
+    
+    var xVel:Float;
+    var yVel:Float;
+    
+    public function new(canvas:Canvas) {
+        this.canvas = canvas;
         
-        boxX = 50;
+        width = 20;
+        height = 20;
+        
+        x = Math.random() * (canvas.width - width);
+        y = Math.random() * (canvas.height - height);
+        
+        xVel = 1 + Math.random() * 6;
+        yVel = 1 + Math.random() * 6;
     }
     
-    public function draw():Void {
-        fill(200, 100, 100);
-        rect([50, 50], [100, 100]);
+    public function draw() {
+        if(x+width >= canvas.width || x <= 0) {
+            xVel *= -1;
+        }
         
-        fill(100, 100, 200, 100);
-        rect([80, 80], [130, boxX]);
+        if(y+height >= canvas.height || y <= 0) {
+            yVel *= -1;
+        }
         
-        boxX++;
+        x += xVel;
+        y += yVel;
+        
+        canvas.fill(200, 100, 100, 100);
+        canvas.rect([x, y], [this.width, this.height]);
+    }
+}
+
+class Main extends Canvas {
+    var boxes:Array<Box>;
+    
+    public function setup() {
+        boxes = new Array<Box>();
+        
+        for(i in 0...100) {
+            boxes.push(new Box(this));
+        }
+    }
+    
+    public function draw(?_) : Void {
+        background(200, 210, 220);
+
+        for(box in boxes) {
+            box.draw();
+        }
     }
 
     static function main() : Void {
         var m = new Main();
-        //m.start();
     }
 }

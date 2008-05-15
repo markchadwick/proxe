@@ -1,18 +1,24 @@
 package proxe;
 
-import flash.display.Sprite;
+import flash.Lib;
+import flash.events.Event;
 
+import proxe.Color;
 import proxe.graphics.Graphics;
 import proxe.graphics.FlashGraphics;
 
-
-class Canvas extends flash.display.Sprite {
+class Canvas {
+    
+    public var width:Int;
+    public var height:Int;
+    
     ////////////////////////////////////////////////////////////////////////////
     // Fields
     private var graphics:FlashGraphics;
     
-    private var fillColor:Int;
-    private var strokeColor:Int;
+    private var fillColor:Color;
+    private var strokeColor:Color;
+    private var strokeWeight:Float;
     
     ////////////////////////////////////////////////////////////////////////////
     // Constructor
@@ -26,91 +32,67 @@ class Canvas extends flash.display.Sprite {
         
         fillColor = resolveColor(128);
         strokeColor = resolveColor(0);
+        strokeWeight = 1;
         
-        this.addEventListener(Event.ENTER_FRAME, draw);
+        width = 400;
+        height = 300;
         
+        flash.Lib.current.addEventListener(Event.ENTER_FRAME, draw);
+        
+        setup();
+        draw();
+    }
+    
+    public function setup() : Void {
+        trace("missing setup!");
+    }
+    
+    public function draw(?_) : Void {
+
     }
 
-    public function start() {
-        //draw();
-    }
-
-    public function draw() {
+    public function push(f:Int) {
     }
 
     ////////////////////////////////////////////////////////////////////////////
     // Drawing Methods
     
-    public function rect(topLeft:Array<Int>, bottomRight:Array<Int>) : Void {
-        graphics.beginShape(fillColor, strokeColor);
-        
-        graphics.vertex(topLeft[0],     topLeft[1]);
-        graphics.vertex(bottomRight[0], topLeft[1]);
-        graphics.vertex(bottomRight[0], bottomRight[1]);
-        graphics.vertex(topLeft[0],     bottomRight[1]);
-        
-        graphics.endShape();
+    public function background(r, ?g, ?b, ?a) : Void {
+        graphics.background(Color.resolve(r, g, b, a));
+    }
+    
+    public function rect(topLeft:Array<Float>, bottomRight:Array<Float>) : Void {
+        graphics.rect(topLeft[0], topLeft[1], bottomRight[0], bottomRight[1]);
+    }
+    
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Random Methods
+    
+    public function random(?low:Float, ?high:Float) : Void {
     }
 
     ////////////////////////////////////////////////////////////////////////////
     // Color Methods
     
     public function fill(r:Int, ?g:Int, ?b:Int, ?a:Int) : Void {
-        fillColor = resolveColor(r, g, b, a);
+        fillColor = Color.resolve(r, g, b, a);
+        graphics.fillColor = fillColor;
     }
     
-    /**
-     * Red channel component of a packed color integer
-     */
-    public function red(r:Int) : Int {
-        return graphics.red(r);
+    public function noFill() : Void {
+        fillColor = Color.NONE;
+        graphics.fillColor = Color.NONE;
     }
     
-    /**
-     * Green channel component of a packed color integer
-     */
-    public function green(g:Int) : Int {
-        return graphics.green(g);
+    public function stroke(r:Int, ?g:Int, ?b:Int, a:Int) : Void {
+        strokeColor = Color.resolve(r, g, b, a);
+        graphics.fillColor = strokeColor;
     }
     
-    /**
-     * Blue channel component of a packed color integer
-     */
-    public function blue(b:Int) : Int {
-        return graphics.blue(b);
-    }
-    
-    /**
-     * Alpha channel component of a packed color integer
-     */
-    public function alpha(a:Int) : Int {
-        return graphics.alpha(a);
-    }
-    
-    /**
-     * Takes four integers from 0-255, and packs them into a single integer.
-     * If any of the given parameters is less than zero, it will cast it to
-     * exactly zero.  If one of the parameters is above 255, it will case it to
-     * exactly 255.
-     *
-     * The layout of the packed integer are as follows:
-     *
-     *  (2 bytes alpha) (2 bytes red) (2 bytes green) (2 bytes blue)
-     *
-     * Some examples of given RGBA parameters, and the resulting packed integer:
-     *
-     *  (r:0, g:0, b:0, a:255)      => 0xff000000
-     *  (r:255, g:0, b:0, a:0)      => 0x00ff0000
-     *  (r:0, g:255, b:0, a:255)    => 0xff00ff00
-     *  (r:255, g:-1, b:1000, a:128)=> 0x80ff00ff
-     */
-    public function packColor(r:Int, g:Int, b:Int, a:Int) : Int {
-        r = (r < 0) ? 0 : (r > 255) ? 255 : r;
-        g = (g < 0) ? 0 : (g > 255) ? 255 : g;
-        b = (b < 0) ? 0 : (b > 255) ? 255 : b;
-        a = (a < 0) ? 0 : (a > 255) ? 255 : a;
-        
-        return (a << 24) | (r << 16) | (g << 8) | b;
+    public function noStroke() : Void {
+        strokeColor = Color.NONE;
+        graphics.strokeColor = Color.NONE;
     }
     
     /**
@@ -122,16 +104,7 @@ class Canvas extends flash.display.Sprite {
      *  resolveColor(red, green, blue)
      *  resolveColor(red, green, blue, alpha)
      */
-    public function resolveColor(r:Int, ?g:Int, ?b:Int, ?a:Int) : Int {
-        if(a == null) {
-            if(b == null) {
-                if(g == null) {
-                    return packColor(r, r, r, 255);
-                }
-                return packColor(r, r, r, g);
-            }
-            return packColor(r, g, b, 255);
-        }
-        return packColor(r, g, b, a);
+    public function resolveColor(r:Int, ?g:Int, ?b:Int, ?a:Int) : Color {
+        return new Color(r, g, b, a);
     }
 }
