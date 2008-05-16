@@ -310,7 +310,7 @@ class Sprite {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    // 2d Primitive Shape Methods
+    // 2D Primitive Shape Methods
 
     /**
      * @Processing:
@@ -443,6 +443,75 @@ class Sprite {
      */
     public function rect(x:Float, y:Float, width:Float, height:Float) {
         throw "Sprite.rect() not implemented";
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Curve Shape Methods
+    
+    /**
+     * @Processing:
+     *
+     * Draws a curved line on the screen. The first and second parameters
+     * specify the first anchor point and the last two parameters specify the
+     * second anchor. The middle parameters specify the points for defining the
+     * shape of the curve. Longer curves can be created by putting a series of
+     * curve() functions together. An additional function called
+     * curveTightness() provides control for the visual quality of the curve.
+     * The curve() function is an implementation of Catmull-Rom splines. Using
+     * the 3D version of requires rendering with P3D or OPENGL (see the
+     * Environment reference for more information).
+     *
+     * @param x1    x coordinate of the first anchor point
+     * @param y1    y coordinate of the first anchor point
+     * @param z1    z coordinate of the first anchor point
+     * @param x1    x coordinate of the second anchor point
+     * @param y1    y coordinate of the second anchor point
+     * @param z1    z coordinate of the second anchor point
+     * @param x1    x coordinate of the third anchor point
+     * @param y1    y coordinate of the third anchor point
+     * @param z1    z coordinate of the third anchor point
+     * @param x1    x coordinate of the fourth anchor point
+     * @param y1    y coordinate of the fourth anchor point
+     * @param z1    z coordinate of the fourth anchor point
+     */
+    public function curve(x1:Float, y1:Float, z1:Float,
+        x2:Float, y2:Float, z2:Float,
+        x3:Float, y3:Float, z3:Float,
+        ?x4:Float, ?y4:Float, ?z4:Float) {
+        
+        throw "Sprite.curve() not implemented";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * Draws a Bezier curve on the screen. These curves are defined by a series
+     * of anchor and control points. The first two parameters specify the first
+     * anchor point and the last two parameters specify the other anchor point.
+     * The middle parameters specify the control points which define the shape
+     * of the curve. Bezier curves were developed by French engineer Pierre
+     * Bezier. Using the 3D version of requires rendering with P3D or OPENGL
+     * (see the Environment reference for more information).
+     *
+     * @param x1    x coordinate of the first anchor point
+     * @param y1    y coordinate of the first anchor point
+     * @param z1    z coordinate of the first anchor point
+     * @param cx1   x coordinate of the first control point
+     * @param cy1   y coordinate of the first control point
+     * @param cz1   z coordinate of the first control point
+     * @param cx2   x coordinate of the second control point
+     * @param cy2   y coordinate of the second control point
+     * @param cz2   z coordinate of the second control point
+     * @param x2    x coordinate of the second anchor point
+     * @param y2    y coordinate of the second anchor point
+     * @param z2    z coordinate of the second anchor point
+     */
+    public function bezier(x1:Float, y1:Float, z1:Float,
+        cx1:Float, cy1:Float, cz1:Float,
+        cz2:Float, cy2:Float, cz2:Float,
+        x2:Float, y2:Float, z2:Float) {
+        
+        throw "Sprite.bezier() not implemented";
     }
     
     ////////////////////////////////////////////////////////////////////////////

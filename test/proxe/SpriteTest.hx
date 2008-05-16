@@ -217,6 +217,30 @@ class SpriteTest extends TestCase {
         sprite.rect(10, 10, 10, 10);
     }
     
+    ////////////////////////////////////////////////////////////////////////////
+    // Curve Shape Methods
+    
+    public function testCurve() {
+        sprite.curve(
+            1, 2, 3,
+            4, 5, 6,
+            7, 8, 9,
+            10, 11, 12
+        );
+    }
+    
+    public function testBeizer() {
+        sprite.bezier(
+            1, 2, 3,
+            4, 5, 6,
+            7, 8, 9,
+            10, 11, 12
+        );
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Vertex Shape Methods
+    
     public function testBeginShape() {
         sprite.beginShape();
     }
