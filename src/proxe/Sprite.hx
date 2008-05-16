@@ -1,5 +1,10 @@
 package proxe;
 
+import haxe.Timer;
+
+import proxe.graphics.Graphics;
+import proxe.graphics.MockGraphics;
+
 class Sprite {
     /*
      * LANGUAGE MISMATCHES:
@@ -8,16 +13,23 @@ class Sprite {
      * http://processing.org/reference/frameRate.html
      *
      */
-
     
     ////////////////////////////////////////////////////////////////////////////
     // Public Fields
 
-    var width:Int;
-    var height:Int;
-    var framesPerSecond:Int;
+    public var width:Int;
+    public var height:Int;
+    
+    public var framesPerSecond:Int;
 
+    public var graphicsClass:String;
+    public var graphics:Graphics;
 
+    ////////////////////////////////////////////////////////////////////////////
+    // Private Fields
+
+    private var timer:haxe.Timer;
+    private var looping:Bool;
     
     ////////////////////////////////////////////////////////////////////////////
     // Constructor
@@ -29,6 +41,8 @@ class Sprite {
      *  width:              100 px
      *  height:             100 px
      *  framesPerSecond:    60
+     *  graphicsClass       "proxe.graphics.Graphics"
+     *  looping             flase
      * 
      */
     public function new() {
@@ -36,6 +50,52 @@ class Sprite {
         height = 100;
 
         framesPerSecond = 60;
+        graphicsClass = "proxe.graphics.Graphics";
+        looping = false;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Control Methods
+
+    public function init() {
+        looping = true;
+
+        setup();
+        start();
+    }
+
+    public function start() {
+        var startTime:Float;
+        var diff:Float;
+
+        var sleepTime:Float = 1.0/framesPerSecond;
+
+        trace("Sleep Time: "+ sleepTime);
+        
+        while(looping) {
+            startTime =  Timer.stamp();
+            draw();
+            diff = sleepTime - ((Timer.stamp() - startTime)/100);
+
+            if(diff > 0) {
+                neko.Sys.sleep(diff);
+            }
+        }
+    }
+
+    public function stop() {
+        looping = false;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Placeholder Functions
+
+    public function setup() {
+        trace("Undefined Setup!");
+    }
+
+    public function draw() {
+        trace("Undefined Draw!");
     }
     
     ////////////////////////////////////////////////////////////////////////////
@@ -89,9 +149,11 @@ class Sprite {
      * item inside setup). Any code that appears before the size() command may
      * run more than once, which can lead to confusing results.
      */
-    public void size(width:Int, height:Int, ?graphics) {
+    public function size(width:Int, height:Int, ?graphics:Dynamic) {
         this.width = width;
         this.height = height;
+
+        this.graphics = initializeGraphics(graphics);
     }
 
     /**
@@ -101,6 +163,7 @@ class Sprite {
      * noLoop() is called, the code in draw() stops executing.
      */
     public function loop() {
+        start();
     }
 
     /**
@@ -120,6 +183,7 @@ class Sprite {
      * would enter an odd state until loop() was called.
      */
     public function noLoop() {
+        stop();
     }
 
 
@@ -181,5 +245,34 @@ class Sprite {
      * web browser.
      */
     public function noCursor() {
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Private methods
+
+    /**
+     * Initializes the graphics for this Sprite.  The three possible options for
+     * `graphicsType` are:
+     *
+     *  when (graphics == null):            reflect this.graphicsClass string
+     *  when (graphics is a String):        reflect the string
+     *  when (graphics is a GraphicsType):  instance that type
+     */
+    private function initializeGraphics(graphics:Dynamic) : Graphics {
+        if(graphics == null) {
+            graphics = this.graphicsClass;
+        }
+
+        if(String == Type.getClass(graphics)) {
+            return Type.createInstance(Type.resolveClass(graphics), [this]);
+        }
+
+        switch(cast(graphics, GraphicType)) {
+            case MOCK: return new MockGraphics(this);
+        }
+
+        // TODO: Throw exception
+        return null;
     }
 }

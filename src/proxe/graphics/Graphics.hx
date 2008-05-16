@@ -1,9 +1,9 @@
 package proxe.graphics;
 
+enum GraphicType {
+    MOCK;
+}
+
 class Graphics {
-    /**
-     * TODO: Graphics shouldn't have a constructor!
-     */
-    public function new() {
-    }
+
 }
