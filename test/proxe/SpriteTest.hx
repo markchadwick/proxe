@@ -263,7 +263,7 @@ class SpriteTest extends TestCase {
     }
     
     ////////////////////////////////////////////////////////////////////////////
-    // Shape Attribute Methods
+    // Shape Attribute Method Tests
     
     public function testStrokeWeight() {
         sprite.strokeWeight(10);
@@ -283,5 +283,32 @@ class SpriteTest extends TestCase {
     
     public function testRectMode() {
         sprite.rectMode();
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Color Method Tests
+    
+    public function testBackground() {
+        sprite.background(0);
+    }
+    
+    public function testColorMode() {
+        sprite.colorMode(0);
+    }
+    
+    public function testStroke() {
+        sprite.stroke(100);
+    }
+    
+    public function testNoStroke() {
+        sprite.noStroke();
+    }
+    
+    public function testFill() {
+        sprite.fill(100);
+    }
+    
+    public function testNoFill() {
+        sprite.noFill();
     }
 }

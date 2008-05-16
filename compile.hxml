@@ -1,4 +1,5 @@
 -cp src
+-cp flash
 -swf test.swf
 -swf-version 9
 -main proxe.Main

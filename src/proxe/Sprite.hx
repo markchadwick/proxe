@@ -3,7 +3,10 @@ package proxe;
 import haxe.Timer;
 
 import proxe.graphics.Graphics;
+
+#if neko
 import proxe.graphics.MockGraphics;
+#end
 
 class Sprite {
     /*
@@ -91,10 +94,16 @@ class Sprite {
         height = 100;
 
         framesPerSecond = 60;
-        graphicsClass = "proxe.graphics.Graphics";
         looping = false;
-        
         frameCount = 0;
+        
+        #if flash9
+        trace("Flash 9!");
+        graphicsClass = "proxe.graphics.FlashGraphics";
+        #else
+        trace("Other :(");
+        graphicsClass = "proxe.graphics.Graphics";
+        #end
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -753,6 +762,139 @@ class Sprite {
     }
     
     ////////////////////////////////////////////////////////////////////////////
+    // Color Setting Methods
+    
+    /**
+     * @Processing:
+     *
+     * The background() function sets the color used for the background of the
+     * Processing window. The default background is light gray. In the draw()
+     * function, the background color is used to clear the display window at the
+     * beginning of each frame.
+     *
+     * An image can also be used as the background for a sketch, however its
+     * width and height must be the same size as the sketch window.
+     *
+     * It is not possible to use transparency (alpha) in background colors with
+     * the main drawing surface, however they will work properly with
+     * createGraphics.
+     *
+     * @param red
+     * @param green
+     * @param blue
+     */
+    public function background(red:Int, ?green:Int, ?blue:Int) {
+        throw "Sprite.background() not implemented";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * Changes the way Processing interprets color data. By default, fill(),
+     * stroke(), and background() colors are set by values between 0 and 255
+     * using the RGB color model. It is possible to change the numerical range
+     * used for specifying colors and to switch color systems. For example,
+     * calling colorMode(RGB, 1.0) will specify that values are specified
+     * between 0 and 1. The limits for defining colors are altered by setting
+     * the parameters range1, range2, range3, and range 4.
+     *
+     * @param mode      Either RGB or HSB, corresponding to Red/Green/Blue and
+     *                  Hue/Saturation/Brightness
+     * @param range     range for all color elemnts
+     * @param range1    range for red or hue elements depending on mode
+     * @param range2    range for green saturation elements depending on mode
+     * @param range3    range for blue or brightness elements depending on mode
+     * @param range4    range for alpha elements
+     */
+    public function colorMode(mode:Dynamic, ?range:Float, ?range1:Float,
+        ?range2:Float, ?range3:Float, ?range4:Float) {
+        
+        throw "Sprite.colorMode() not implemented";
+    }
+    
+    
+    /**
+     * @Processing:
+     *
+     * Sets the color used to draw lines and borders around shapes. This color
+     * is either specified in terms of the RGB or HSB color depending on the
+     * current colorMode() (the default color space is RGB, with each value in
+     * the range from 0 to 255).
+     *
+     * When using hexadecimal notation to specify a color, use "#" or "0x"
+     * before the values (e.g. #CCFFAA, 0xFFCCFFAA). The # syntax uses six
+     * digits to specify a color (the way colors are specified in HTML and CSS).
+     * When using the hexadecimal notation starting with "0x", the hexadecimal
+     * value must be specified with eight characters; the first two characters
+     * define the alpha component and the remainder the red, green, and blue
+     * components.
+     * 
+     * The value for the parameter "gray" must be less than or equal to the
+     * current maximum value as specified by colorMode(). The default maximum
+     * value is 255.
+     *
+     * @param red
+     * @param green
+     * @param blue
+     * @param alpha
+     */
+    public function stroke(red:Int, ?green:Int, ?blue:Int, ?alpha:Int) {
+        throw "Sprite.stroke() not implemented";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * Disables drawing the stroke (outline). If both noStroke() and noFill()
+     * are called, nothing will be drawn to the screen.
+     */
+    public function noStroke() {
+        throw "Sprite.noStroke() not implemented";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * Sets the color used to fill shapes. For example, if you run
+     * fill(204, 102, 0), all subsequent shapes will be filled with orange. This
+     * color is either specified in terms of the RGB or HSB color depending on
+     * the current colorMode() (the default color space is RGB, with each value
+     * in the range from 0 to 255).
+     *
+     * When using hexadecimal notation to specify a color, use "#" or "0x"
+     * before the values (e.g. #CCFFAA, 0xFFCCFFAA). The # syntax uses six
+     * digits to specify a color (the way colors are specified in HTML and CSS).
+     * When using the hexadecimal notation starting with "0x", the hexadecimal
+     * value must be specified with eight characters; the first two characters
+     * define the alpha component and the remainder the red, green, and blue
+     * components.
+     *
+     * The value for the parameter "gray" must be less than or equal to the
+     * current maximum value as specified by colorMode(). The default maximum
+     * value is 255.
+     *
+     * To change the color of an image (or a texture), use tint().
+     *
+     * @param red
+     * @param green
+     * @param blue
+     * @param alpha
+     */
+    public function fill(red:Int, ?green:Int, ?blue:Int, ?alpha:Int) {
+        throw "Sprite.fill() not implemented";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * Disables filling geometry. If both noStroke() and noFill() are called,
+     * nothing will be drawn to the screen.
+     */
+    public function noFill() {
+        throw "Sprite.noFill() not implemented";
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
     // Private methods
 
     /**
@@ -773,9 +915,11 @@ class Sprite {
                 return Type.createInstance(Type.resolveClass(graphics), [this]);
             }
 
+            #if neko
             switch(cast(graphics, GraphicType)) {
                 case MOCK: return new MockGraphics(this);
             }
+            #end
             
         } catch(e:Dynamic) {
             throw "Unknown Graphics Type: "+ graphics;
