@@ -17,13 +17,53 @@ class Sprite {
     ////////////////////////////////////////////////////////////////////////////
     // Public Fields
 
+    /**
+     * @Processing:
+     *
+     * System variable which stores the width of the display window. This value
+     * is set by the first parameter of the size() function. For example, the
+     * function call size(320, 240) sets the width variable to the value 320.
+     * The value of width is zero until size() is called.
+     */
     public var width:Int;
+    
+    /**
+     * @Processing:
+     *
+     * System variable which stores the height of the display window. This value
+     * is set by the second parameter of the size() function. For example, the
+     * function call size(320, 240) sets the height variable to the value 240.
+     * The value of height is zero until size() is called.
+     */
     public var height:Int;
     
     public var framesPerSecond:Int;
 
     public var graphicsClass:String;
     public var graphics:Graphics;
+    
+    /**
+     * @Processing:
+     * 
+     * The system variable frameCount contains the number of frames displayed
+     * since the program started. Inside setup() the value is 0 and and after
+     * the first iteration of draw it is 1, etc.
+     */
+    public var frameCount:Int;
+    
+    /**
+     * @Processing:
+     *
+     * System variable which stores the dimensions of the computer screen. For
+     * example, if the current screen resolution is 1024x768, screen.width is
+     * 1024 and screen.height is 768. These dimensions are useful when exporting
+     * full-screen applications. To ensure that the sketch takes over the entire
+     * screen, use "Present" instead of "Run". Otherwise the window will still
+     * have a frame border around it and not be placed in the upper corner of
+     * the screen. On Mac OS X, the menu bar will remain present unless\
+     * "Present" mode is used.
+     */
+    public var screen:Dynamic;
 
     ////////////////////////////////////////////////////////////////////////////
     // Private Fields
@@ -42,7 +82,8 @@ class Sprite {
      *  height:             100 px
      *  framesPerSecond:    60
      *  graphicsClass       "proxe.graphics.Graphics"
-     *  looping             flase
+     *  looping             false
+     *  frameCount          0
      * 
      */
     public function new() {
@@ -52,28 +93,38 @@ class Sprite {
         framesPerSecond = 60;
         graphicsClass = "proxe.graphics.Graphics";
         looping = false;
+        
+        frameCount = 0;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Placeholder Functions
+
+    public function setup() {
+    }
+
+    public function draw() {
     }
 
     ////////////////////////////////////////////////////////////////////////////
     // Control Methods
 
     public function init() {
-        looping = true;
-
         setup();
         start();
     }
 
     public function start() {
+        looping = true;
+        
         var startTime:Float;
         var diff:Float;
 
         var sleepTime:Float = 1.0/framesPerSecond;
-
-        trace("Sleep Time: "+ sleepTime);
-        
+    
         while(looping) {
             startTime =  Timer.stamp();
+            frameCount++;
             draw();
             diff = sleepTime - ((Timer.stamp() - startTime)/100);
 
@@ -85,17 +136,6 @@ class Sprite {
 
     public function stop() {
         looping = false;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Placeholder Functions
-
-    public function setup() {
-        trace("Undefined Setup!");
-    }
-
-    public function draw() {
-        trace("Undefined Draw!");
     }
     
     ////////////////////////////////////////////////////////////////////////////
@@ -163,7 +203,9 @@ class Sprite {
      * noLoop() is called, the code in draw() stops executing.
      */
     public function loop() {
-        start();
+        if(!looping) {
+            start();
+        }
     }
 
     /**
@@ -183,7 +225,9 @@ class Sprite {
      * would enter an odd state until loop() was called.
      */
     public function noLoop() {
-        stop();
+        if(looping) {
+            stop();
+        }
     }
 
 
@@ -202,6 +246,7 @@ class Sprite {
      * the loop before stopping.
      */
     public function delay(milliseconds:Int) {
+        throw "Sprite.delay not implemented";
     }
 
 
@@ -221,6 +266,7 @@ class Sprite {
      * continuously called anyway.
      */
     public function redraw() {
+        throw "Sprite.redraw() not implemented";
     }
     
     ////////////////////////////////////////////////////////////////////////////
@@ -236,6 +282,7 @@ class Sprite {
      * setup(). The default rate is 60 frames per second.
      */
     public function frameRate(fps:Int) {
+        throw "Sprite.frameRate() not implemented";
     }
 
     /**
@@ -245,8 +292,159 @@ class Sprite {
      * web browser.
      */
     public function noCursor() {
+        throw "Sprite.noCursor() not implemented";
     }
 
+    /**
+     * @Processing:
+     *
+     * Sets the cursor to a predefined symbol, an image, or turns it on if
+     * already hidden. If you are trying to set an image as the cursor, it is
+     * recommended to make the size 16x16 or 32x32 pixels. It is not possible to
+     * load an image as the cursor if you are exporting your program for the
+     * Web. The values for parameters x and y must be less than the dimensions
+     * of the image.
+     */
+    public function cursor(?modeOrImage:Dynamic, ?x:Float, ?y:Float) {
+        throw "Sprite.cursor() not implemented";
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Shape Methods
+
+    /**
+     * @Processing:
+     *
+     * A triangle is a plane created by connecting three points. The first two
+     * arguments specify the first point, the middle two arguments specify the
+     * second point, and the last two arguments specify the third point.
+     */
+    public function triangle(x1:Float, y1:Float,
+        x2:Float, y2:Float,
+        x3:Float, y3:Float) {
+        
+        throw "Sprite.triangle() not implemented";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * Draws a line (a direct path between two points) to the screen. The
+     * version of line() with four parameters draws the line in 2D. To color a
+     * line, use the stroke() function. A line cannot be filled, therefore the
+     * fill() method will not affect the color of a line. 2D lines are drawn
+     * with a width of one pixel by default, but this can be changed with the
+     * strokeWeight() function. The version with six parameters allows the line
+     * to be placed anywhere within XYZ space. Drawing this shape in 3D using
+     * the z parameter requires the P3D or OPENGL parameter in combination with
+     * size as shown in the above example.
+     */
+    public function line(x1:Float, y1:Float, z1:Float,
+        x2:Float, ?y2:Float, ?z2:Float) {
+        
+        throw "Sprite.line() not implemented";
+    }
+
+    /**
+     * @Processing:
+     *
+     * Draws an arc in the display window. Arcs are drawn along the outer edge
+     * of an ellipse defined by the x, y, width and height parameters. The
+     * origin or the arc's ellipse may be changed with the ellipseMode()
+     * function. The start and stop parameters specify the angles at which to
+     * draw the arc.
+     *
+     * @param x         x coordinate of the arc's ellipse
+     * @param y         y coordinate of the arc's ellipse
+     * @param width     with of the arc's ellipse
+     * @param height    height of the arc's ellipse
+     * @param start     angle to start the arc, specified in radians or degrees
+     *                  depending on the current angle mode
+     * @param stop      angle to stop the arc, specified in radians or degrees
+     *                  depending on the current angle mode
+     */
+    public function arc(x:Float, y:Float, width:Float, height:Float,
+        start:Float, stop:Float) {
+        
+        throw "Sprite.arc() not implemented";
+    }
+
+    /**
+     * @Processing:
+     *
+     * Draws a point, a coordinate in space at the dimension of one pixel. The
+     * first parameter is the horizontal value for the point, the second value
+     * is the vertical value for the point, and the optional third value is the
+     * depth value. Drawing this shape in 3D using the z parameter requires the
+     * P3D or OPENGL parameter in combination with size as shown in the above
+     * example.
+     *
+     * @param x         x coordinate of the point
+     * @param y         y coordinate of the point
+     * @param z         optional z coordinate of the point
+     */
+    public function point(x:Float, y:Float, ?z:Float) {
+        throw "Sprite.point() not implemented";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * A quad is a quadrilateral, a four sided polygon. It is similar to a 
+     * rectangle, but the angles between its edges are not constrained to ninety
+     * degrees. The first pair of parameters (x1,y1) sets the first vertex and
+     * the subsequent pairs should proceed clockwise or counter-clockwise around
+     * the defined shape.
+     *
+     * @param x1        x coordinate of the first corner
+     * @param y1        y coordinate of the first corner
+     * @param x1        x coordinate of the second corner
+     * @param y1        y coordinate of the second corner
+     * @param x1        x coordinate of the third corner
+     * @param y1        y coordinate of the third corner
+     * @param x1        x coordinate of the fourth corner
+     * @param y1        y coordinate of the fourth corner
+     */
+    public function quad(x1:Float, y1:Float, x2:Float, y2:Float,
+        x3:Float, y3:Float, x4:Float, y4:Float) {
+        
+        throw "Sprite.quad() not implemented";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * Draws an ellipse (oval) in the display window. An ellipse with an equal
+     * width and height is a circle. The first two parameters set the location,
+     * the third sets the width, and the fourth sets the height. The origin may
+     * be changed with the ellipseMode() function.
+     *
+     * @param x         x coordinate of the ellipse
+     * @param y         y coordinate of the ellipse
+     * @param width     width of the ellipse
+     * @param height    height of the ellipse
+     */
+    public function ellipse(x:Float, y:Float, width:Float, height:Float) {
+        throw "Sprite.ellipse() not implemented!";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * Draws a rectangle to the screen. A rectangle is a four-sided shape with
+     * every angle at ninety degrees. The first two parameters set the location,
+     * the third sets the width, and the fourth sets the height. The origin is
+     * changed with the rectMode() function.
+     *
+     * @param x         x coordinate of the rectangle
+     * @param y         y coordinate of the rectangle
+     * @param width     width of the rectangle
+     * @param height    height of the rectangle
+     */
+    public function rect(x:Float, y:Float, width:Float, height:Float) {
+        throw "Sprite.rect() not implemented";
+    }
+    
 
     ////////////////////////////////////////////////////////////////////////////
     // Private methods
@@ -260,19 +458,22 @@ class Sprite {
      *  when (graphics is a GraphicsType):  instance that type
      */
     private function initializeGraphics(graphics:Dynamic) : Graphics {
-        if(graphics == null) {
-            graphics = this.graphicsClass;
-        }
+        try {
+            if(graphics == null) {
+                graphics = this.graphicsClass;
+            }
 
-        if(String == Type.getClass(graphics)) {
-            return Type.createInstance(Type.resolveClass(graphics), [this]);
-        }
+            if(String == Type.getClass(graphics)) {
+                return Type.createInstance(Type.resolveClass(graphics), [this]);
+            }
 
-        switch(cast(graphics, GraphicType)) {
-            case MOCK: return new MockGraphics(this);
+            switch(cast(graphics, GraphicType)) {
+                case MOCK: return new MockGraphics(this);
+            }
+            
+        } catch(e:Dynamic) {
+            throw "Unknown Graphics Type: "+ graphics;
         }
-
-        // TODO: Throw exception
         return null;
     }
 }

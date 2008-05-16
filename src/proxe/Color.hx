@@ -14,7 +14,7 @@ class Color {
         this.blue = blue;
         this.alpha = alpha;
     }
-
+    
     /**
      * Takes four integers from 0-255, and packs them into a single integer.
      * If any of the given parameters is less than zero, it will cast it to
@@ -63,6 +63,10 @@ class Color {
         return new Color(r, g, b, a);
     }
     
+    /**
+     * String representation of a color, IE:
+     *  <Color: r:128 g:23 b:0 a:255>
+     */
     public function toString() : String {
         return "<Color: r:"+ red +" g:"+ green +" b:"+ blue +" a:"+ alpha +">";
     }

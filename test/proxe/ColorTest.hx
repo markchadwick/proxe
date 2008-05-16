@@ -5,15 +5,6 @@ import haxe.unit.TestCase;
 import proxe.Color;
 
 class ColorTest extends TestCase {
-    public var color:Canvas;
-    
-    public function setup() {
-        color = new Color();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Color Tests
-
     /**
      * RGBA colors should be packed into a single integer in the style:
      *  0xAARRGGBB

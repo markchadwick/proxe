@@ -1,6 +1,7 @@
 package proxe;
 
 import neko.vm.Thread;
+import haxe.Timer;
 import haxe.unit.TestCase;
 
 import proxe.Sprite;
@@ -9,12 +10,16 @@ import proxe.graphics.Graphics;
 import proxe.graphics.MockGraphics;
 
 class SpriteTest extends TestCase {
-
+    static var SLEEP_TIME:Float = 0.1;
     var sprite:MockSprite;
     
     public function setup() {
         sprite = new MockSprite();
         sprite.graphicsClass = "proxe.graphics.MockGraphics";
+    }
+    
+    public function tearDown() {
+        sprite.stop();
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -41,6 +46,14 @@ class SpriteTest extends TestCase {
 
     public function testDefaultLooping() {
         assertFalse(sprite.isLooping());
+    }
+    
+    public function testFrameCount() {
+        assertEquals(0, sprite.frameCount);
+    }
+    
+    public function testScreen() {
+        assertTrue(sprite.screen != null);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -78,23 +91,129 @@ class SpriteTest extends TestCase {
         sprite.size(100, 200);
         assertEquals(MockGraphics, Type.getClass(sprite.graphics));
     }
+    
+    public function testSetupUnknownGraphics() {
+        try {
+            sprite.size(100, 200, "Unknown Graphics");
+            assertTrue(false);
+        } catch (e:Dynamic) {
+            assertTrue(true);
+        }
+        
+    }
 
     public function testLoop() {
         var me = this;
-        Thread.create(function() {
+        
+        var t = Thread.create(function() {
             me.sprite.init();
-            me.assertTrue(me.sprite.isLooping());
-        }, 1000);
+        });
+        
+        assertTrue(sprite.isLooping());
+        neko.Sys.sleep(SLEEP_TIME);
         
         sprite.stop();
         
         assertEquals(1, sprite.setupCount);
         assertTrue( sprite.drawCount > 1 );
-        trace("Drew "+ sprite.drawCount +" Frames!");
+    }
+    
+    public function testPauseLoop() {
+        var me = this;
+        
+        var t = Thread.create(function() {
+            me.sprite.init();
+        });
+        
+        neko.Sys.sleep(SLEEP_TIME);
+        sprite.noLoop();
+        
+        var drawCount = sprite.drawCount;
+        assertTrue(drawCount > 1);
+        neko.Sys.sleep(SLEEP_TIME);
+        assertEquals(drawCount, sprite.drawCount);
+    }
+    
+    public function testPauseAndResume() {
+        var me = this;
+        
+        var t = Thread.create(function() {
+            me.sprite.init();
+        });
+        
+        neko.Sys.sleep(SLEEP_TIME);
+        sprite.noLoop();
+        
+        // Pause
+        var drawCount = sprite.drawCount;
+        assertTrue(drawCount > 1);
+        neko.Sys.sleep(SLEEP_TIME);
+        assertEquals(drawCount, sprite.drawCount);
+        
+        // Resume
+        Thread.create(function() {
+            me.sprite.loop();
+        });
+        neko.Sys.sleep(SLEEP_TIME);
+        assertTrue(drawCount < sprite.drawCount);
     }
 
     public function testLoopDisabledWithoutSetup() {
+        assertFalse(sprite.isLooping());
         assertEquals(null, sprite.drawCount);
         assertEquals(null, sprite.setupCount);
+    }
+    
+    public function testDelay() {
+        var t = Timer.stamp();
+        sprite.delay(100);
+        assertTrue((Timer.stamp() - t) > 100);
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Shape Methods
+    
+    public function testTriangle() {
+        sprite.triangle(0, 0, 0, sprite.width, sprite.height, 0);
+    }
+    
+    public function testLine2D() {
+        sprite.line(0, 0, sprite.width, sprite.height);
+    }
+    
+    public function testLine3D() {
+        sprite.line(0, 0, 10, sprite.width, sprite.height, -10);
+    }
+    
+    public function testArc() {
+        sprite.arc(
+            sprite.width/2, sprite.height/2,
+            sprite.width/4, sprite.height/4,
+            0, Math.PI);
+    }
+    
+    public function testPoint2D() {
+        sprite.point(10, 10);
+    }
+    
+    public function testPoint3D() {
+        sprite.point(10, 10, 10);
+    }
+    
+    public function testQuad() {
+        sprite.quad(
+            0, 0,
+            sprite.width, 0,
+            sprite.width, sprite.height,
+            0, sprite.height
+        );
+    }
+    
+    public function testEllipse() {
+        sprite.ellipse(10, 10, 10, 10);
+    }
+    
+    public function testRect() {
+        sprite.rect(10, 10, 10, 10);
     }
 }

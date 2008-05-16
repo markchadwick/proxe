@@ -16,7 +16,6 @@ class MockSprite extends Sprite {
     }
 
     public function draw() {
-        trace("Sprite drawing");
         drawCount++;
     }
 
