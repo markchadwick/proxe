@@ -639,6 +639,120 @@ class Sprite {
     }
 
     ////////////////////////////////////////////////////////////////////////////
+    // Shape Attribute Methods
+    
+    /**
+     * @Processing:
+     *
+     * Sets the width of the stroke used for lines, points, and the border
+     * around shapes. All widths are set in units of pixels. This function does
+     * not work with the P3D renderer (please see the size() reference for more
+     * information).
+     *
+     * @param width     stroke width
+     */
+    public function strokeWeight(strokeWidth:Float) {
+        throw "Sprite.strokeWeight() not implemented";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * Draws all geometry with smooth (anti-aliased) edges. This will slow down
+     * the frame rate of the application, but will enhance the visual
+     * refinement.
+     *
+     * Starting with release 0124, when using the default (JAVA2D) renderer,
+     * smooth() will also improve image quality of resized images.
+     */
+    public function smooth() {
+        throw "Sprite.smooth() not implemented";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * Draws all geometry with jagged (aliased) edges.
+     */
+    public function noSmooth() {
+        throw "Sprite.noSmooth() not implemented";
+    }
+    
+    
+    /**
+     * @Processing:
+     *
+     * Sets the style of the joints which connect line segments. These joints
+     * are either mitered, beveled, or rounded and specified with the
+     * corresponding parameters MITER, BEVEL, and ROUND. The default joint is
+     * MITER. This function does not work with the P2D, P3D, OR OPENGL renderers
+     * (please see the size() reference for more information).
+     *
+     * @param mode   	Either MITER, BEVEL, or ROUND
+     */
+    public function strokeJoin(?mode:Dynamic) {
+        throw "Sprite.strokeJoin() not implemented";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * Sets the style for rendering line endings. These ends are either squared,
+     * extended, or rounded and specified with the corresponding parameters
+     * SQUARE, PROJECT, and ROUND. The default cap is ROUND. This function does
+     * not work with the P2D, P3D, OR OPENGL renderers (please see the size()
+     * reference for more information)
+     *
+     * @param mode  Either SQUARE, PROJECT, or ROUND
+     */
+    public function strokeCap(?mode:Dynamic) {
+        throw "Sprite.strokeCap() not implemented";
+    }
+
+
+    /**
+     * @Processing:
+     *
+     * The origin of the ellipse is modified by the ellipseMode() function. The
+     * default configuration is ellipseMode(CENTER), which specifies the
+     * location of the ellipse as the center of the shape. The RADIUS mode is
+     * the same, but the width and height parameters to ellipse() specify the
+     * radius of the ellipse, rather than the diameter. The CORNER mode draws
+     * the shape from the upper-left corner of its bounding box. The CORNERS
+     * mode uses the four parameters to ellipse() to set two opposing corners of
+     * the ellipse's bounding box. The parameter must be written in "ALL CAPS"
+     * because Processing is a case sensitive language.
+     *
+     * @param mode  Either CENTER, RADIUS, CORNER, or CORNERS.
+     */
+    public function ellipseMode(?mode:Dynamic) {
+        throw "Sprite.ellipseMode() not implemented";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * Modifies the location from which rectangles draw. The default mode is
+     * rectMode(CORNER), which specifies the location to be the upper left
+     * corner of the shape and uses the third and fourth parameters of rect() to
+     * specify the width and height. The syntax rectMode(CORNERS) uses the first
+     * and second parameters of rect() to set the location of one corner and
+     * uses the third and fourth parameters to set the opposite corner. The
+     * syntax rectMode(CENTER) draws the image from its center point and uses
+     * the third and forth parameters of rect() to specify the image's width and
+     * height. The syntax rectMode(RADIUS) draws the image from its center point
+     * and uses the third and forth parameters of rect() to specify half of the
+     * image's width and height. The parameter must be written in "ALL CAPS"
+     * because Processing is a case sensitive language. Note: In version 125,
+     * the mode named CENTER_RADIUS was shortened to RADIUS.
+     *
+     * @param mode  Either CORNER, CORNERS, CENTER, or RADIUS
+     */
+    public function rectMode(?mode:Dynamic) {
+        throw "Sprite.rectMode() not implemented";
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
     // Private methods
 
     /**

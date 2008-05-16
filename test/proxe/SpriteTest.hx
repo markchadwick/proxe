@@ -261,4 +261,27 @@ class SpriteTest extends TestCase {
         sprite.curveVertex(10, 10);
         sprite.curveVertex(10, 10, 10);
     }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Shape Attribute Methods
+    
+    public function testStrokeWeight() {
+        sprite.strokeWeight(10);
+    }
+    
+    public function testStrokeJoin() {
+        sprite.strokeJoin();
+    }
+    
+    public function testStrokeCap() {
+        sprite.strokeCap();
+    }
+    
+    public function testEllipseMode() {
+        sprite.ellipseMode();
+    }
+    
+    public function testRectMode() {
+        sprite.rectMode();
+    }
 }
