@@ -311,4 +311,23 @@ class SpriteTest extends TestCase {
     public function testNoFill() {
         sprite.noFill();
     }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Color Creating and Reading Methods
+    
+    public function testRed() {
+        assertTrue(true);
+    }
+
+    public function testGreen() {
+        assertTrue(true);
+    }
+
+    public function testBlue() {
+        assertTrue(true);
+    }
+    
+    public function testAlpha() {
+        assertTrue(true);
+    }
 }
