@@ -171,7 +171,7 @@ class SpriteTest extends TestCase {
     }
     
     ////////////////////////////////////////////////////////////////////////////
-    // Shape Methods
+    // Shape Methods - 2D
     
     public function testTriangle() {
         sprite.triangle(0, 0, 0, sprite.width, sprite.height, 0);
@@ -215,5 +215,26 @@ class SpriteTest extends TestCase {
     
     public function testRect() {
         sprite.rect(10, 10, 10, 10);
+    }
+    
+    public function testBeginShape() {
+        sprite.beginShape();
+    }
+    
+    public function testEndShape() {
+        sprite.endShape();
+    }
+    
+    public function testVertex() {
+        sprite.vertex(1, 2);
+    }
+    
+    public function testBezierVertex() {
+        sprite.bezierVertex(1, 2, 3, 4, 5, 6, 7, 8, 9);
+    }
+    
+    public function testCurveVertex() {
+        sprite.curveVertex(10, 10);
+        sprite.curveVertex(10, 10, 10);
     }
 }

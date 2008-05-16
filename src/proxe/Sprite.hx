@@ -310,7 +310,7 @@ class Sprite {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    // Shape Methods
+    // 2d Primitive Shape Methods
 
     /**
      * @Processing:
@@ -445,6 +445,129 @@ class Sprite {
         throw "Sprite.rect() not implemented";
     }
     
+    ////////////////////////////////////////////////////////////////////////////
+    // Vertex Shape Methods
+    
+    /**
+     * @Processing:
+     *
+     * Using the beginShape() and endShape() functions allow creating more
+     * complex forms. beginShape() begins recording vertices for a shape and
+     * endShape() stops recording. The value of the MODE parameter tells it
+     * which types of shapes to create from the provided vertices. With no mode
+     * specified, the shape can be any irregular polygon. The parameters
+     * available for beginShape() are POINTS, LINES, TRIANGLES, TRIANGLE_FAN,
+     * TRIANGLE_STRIP, QUADS, and QUAD_STRIP. After calling the beginShape()
+     * function, a series of vertex() commands must follow. To stop drawing the
+     * shape, call endShape(). The vertex() function with two parameters
+     * specifies a position in 2D and the vertex() function with three
+     * parameters specifies a position in 3D. Each shape will be outlined with
+     * the current stroke color and filled with the fill color. Transformations
+     * such as translate(), rotate(), and scale() do not work within
+     * beginShape(). It is also not possible to use other shapes, such as
+     * ellipse() or rect() within beginShape().
+     *
+     * @param mode      Either POINTS, LINES, TRIANGLES, TRIANGLE_FAN,
+     *                  TRIANGLE_STRIP, QUADS, QUAD_STRIP
+     */
+    public function beginShape(?mode:Dynamic) {
+        throw "Sprite.beginShape() not implemented";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * The endShape() function is the companion to beginShape() and may only be
+     * called after beginShape(). When endshape() is called, all of image data
+     * defined since the previous call to beginShape() is written into the image
+     * buffer. The constant CLOSE as the value for the MODE parameter to close
+     * the shape (to connect the beginning and the end).
+     *
+     * @param mode       Use CLOSE to close the shape
+     */
+    public function endShape(?mode:Dynamic) {
+        throw "Sprite.endShape() not implemented";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * All shapes are constructed by connecting a series of vertices. vertex()
+     * is used to specify the vertex coordinates for points, lines, triangles,
+     * quads, and polygons and is used exclusively within the beginShape() and
+     * endShape() function.
+     *
+     * Drawing a vertex in 3D using the z parameter requires the P3D or OPENGL
+     * parameter in combination with size as shown in the above example.
+     *
+     * This function is also used to map a texture onto the geometry. The
+     * texture() function declares the texture to apply to the geometry and the
+     * u and v coordinates set define the mapping of this texture to the form.
+     * By default, the coordinates used for u and v are specified in relation to
+     * the image's size in pixels, but this relation can be changed with
+     * textureMode().
+     *
+     * @param x     x coordinate of the vertex
+     * @param y     y coordinate of the vertex
+     * @param z     z coordinate of the vertex
+     * @param u     horizontal coordinate for the texture mapping
+     * @param v     vertical coordinate for the texture mapping
+     */
+    public function vertex(x:Float, y:Float, ?z:Float, ?u:Float, ?v:Float) {
+        throw "Sprite.vertex() not implemented";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * Specifies vertex coordinates for Bezier curves. Each call to
+     * bezierVertex() defines the position of two control points and one anchor
+     * point of a Bezier curve, adding a new segment to a line or shape. The
+     * first time bezierVertex() is used within a beginShape() call, it must be
+     * prefaced with a call to vertex() to set the first anchor point. This
+     * function must be used between beginShape() and endShape() and only when
+     * there is no MODE parameter specified to beginShape(). Using the 3D
+     * version of requires rendering with P3D or OPENGL (see the Environment
+     * reference for more information).
+     *
+     * @param cx1   x coordinate of the 1st control point
+     * @param cy1   y coordinate of the 1st control point
+     * @param cz1   z coordinate of the 1st control point
+     * @param cx2   x coordinate of the 2nd control point
+     * @param cy2   y coordinate of the 2nd control point
+     * @param cz2   z coordinate of the 2nd control point
+     * @param x     x coordinate of the anchor point
+     * @param y     y coordinate of the anchor point
+     * @param z     z coordinate of the anchor point
+     */
+    public function bezierVertex(cx1:Float, cy1:Float, cz1:Float,
+        cx2:Float, cy2:Float, cz2:Float,
+        x:Float, y:Float, z:Float) {
+        
+        throw "Sprite.bezierVertex() not implemented";
+    }
+    
+    /**
+     * @Processing:
+     *
+     * Specifies vertex coordinates for curves. This function may only be used
+     * between beginShape() and endShape() and only when there is no MODE
+     * parameter specified to beginShape(). The first and last points in a
+     * series of curveVertex() lines will be used to guide the beginning and end
+     * of a the curve. A minimum of four points is required to draw a tiny curve
+     * between the second and third points. Adding a fifth point with
+     * curveVertex() will draw the curve between the second, third, and fourth
+     * points. The curveVertex() function is an implementation of Catmull-Rom
+     * splines. Using the 3D version of requires rendering with P3D or OPENGL
+     * (see the Environment reference for more information).
+     *
+     * @param x     x coordinate of the vertex
+     * @param y     y coordinate of the vertex
+     * @param z     z coordinate of the vertex
+     */
+    public function curveVertex(x:Float, y:Float, ?z:Float) {
+        throw "Sprite.curveVertex() not implemented";
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     // Private methods
