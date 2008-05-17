@@ -1,0 +1,34 @@
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/structure/statements_and_comments/
+-swf examples/structure/statements_and_comments/index.swf
+-swf-header 200:200:40:FFFFFF
+-main StatementsAndComments
+
+--next
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/structure/coordinates/
+-swf examples/structure/coordinates/index.swf
+-swf-header 200:200:40:FFFFFF
+-main Coordinates
+
+--next
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/structure/width_and_height/
+-swf examples/structure/width_and_height/index.swf
+-swf-header 200:200:40:FFFFFF
+-main WidthAndHeight
+
+--next
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/structure/setup_and_draw/
+-swf examples/structure/setup_and_draw/index.swf
+-swf-header 200:200:40:FFFFFF
+-main SetupAndDraw

@@ -214,7 +214,7 @@ class Sprite {
         this.width = width;
         this.height = height;
 
-        this.graphics = initializeGraphics(graphics);
+        this.graphics = initializeGraphics(graphics, width, height);
         this.graphics.fill(fillColor);
         this.graphics.stroke(strokeColor);
     }
@@ -253,7 +253,6 @@ class Sprite {
         }
     }
 
-
     /**
      * @Processing:
      * 
@@ -269,6 +268,7 @@ class Sprite {
      * the loop before stopping.
      */
     public function delay(milliseconds:Int) {
+        trace("Sprite.delay() not implemented");
         throw "Sprite.delay not implemented";
     }
 
@@ -289,6 +289,7 @@ class Sprite {
      * continuously called anyway.
      */
     public function redraw() {
+        trace("Sprite.redraw() not implemented");
         throw "Sprite.redraw() not implemented";
     }
     
@@ -305,6 +306,7 @@ class Sprite {
      * setup(). The default rate is 60 frames per second.
      */
     public function frameRate(fps:Int) {
+        trace("Sprite.frameRate() not implemented");
         throw "Sprite.frameRate() not implemented";
     }
 
@@ -315,6 +317,7 @@ class Sprite {
      * web browser.
      */
     public function noCursor() {
+        trace("Sprite.noCursor() not implemented");
         throw "Sprite.noCursor() not implemented";
     }
 
@@ -329,6 +332,7 @@ class Sprite {
      * of the image.
      */
     public function cursor(?modeOrImage:Dynamic, ?x:Float, ?y:Float) {
+        trace("Sprite.cursor() not implemented");
         throw "Sprite.cursor() not implemented";
     }
 
@@ -364,8 +368,7 @@ class Sprite {
      */
     public function line(x1:Float, y1:Float, z1:Float,
         x2:Float, ?y2:Float, ?z2:Float) {
-        
-        throw "Sprite.line() not implemented";
+        graphics.line(x1, y1, z1, x2, y2, z2);
     }
 
     /**
@@ -388,7 +391,8 @@ class Sprite {
      */
     public function arc(x:Float, y:Float, width:Float, height:Float,
         start:Float, stop:Float) {
-        
+
+        trace("Sprite.arc() not implemented");
         throw "Sprite.arc() not implemented";
     }
 
@@ -407,7 +411,7 @@ class Sprite {
      * @param z         optional z coordinate of the point
      */
     public function point(x:Float, y:Float, ?z:Float) {
-        throw "Sprite.point() not implemented";
+        graphics.point(x, y, z);
     }
     
     /**
@@ -430,7 +434,8 @@ class Sprite {
      */
     public function quad(x1:Float, y1:Float, x2:Float, y2:Float,
         x3:Float, y3:Float, x4:Float, y4:Float) {
-        
+
+        trace("Sprite.quad() not implemented");
         throw "Sprite.quad() not implemented";
     }
     
@@ -448,6 +453,7 @@ class Sprite {
      * @param height    height of the ellipse
      */
     public function ellipse(x:Float, y:Float, width:Float, height:Float) {
+        trace("Sprite.ellipse() not implemented!");
         throw "Sprite.ellipse() not implemented!";
     }
     
@@ -501,7 +507,8 @@ class Sprite {
         x2:Float, y2:Float, z2:Float,
         x3:Float, y3:Float, z3:Float,
         ?x4:Float, ?y4:Float, ?z4:Float) {
-        
+
+        trace("Sprite.curve() not implemented");
         throw "Sprite.curve() not implemented";
     }
     
@@ -533,7 +540,8 @@ class Sprite {
         cx1:Float, cy1:Float, cz1:Float,
         cz2:Float, cy2:Float, cz2:Float,
         x2:Float, y2:Float, z2:Float) {
-        
+
+        trace("Sprite.bezier() not implemented");
         throw "Sprite.bezier() not implemented";
     }
     
@@ -610,6 +618,7 @@ class Sprite {
      * @param v     vertical coordinate for the texture mapping
      */
     public function vertex(x:Float, y:Float, ?z:Float, ?u:Float, ?v:Float) {
+        trace("Sprite.vertex() not implemented");
         throw "Sprite.vertex() not implemented";
     }
     
@@ -639,7 +648,8 @@ class Sprite {
     public function bezierVertex(cx1:Float, cy1:Float, cz1:Float,
         cx2:Float, cy2:Float, cz2:Float,
         x:Float, y:Float, z:Float) {
-        
+
+        trace("Sprite.bezierVertex() not implemented");
         throw "Sprite.bezierVertex() not implemented";
     }
     
@@ -662,6 +672,7 @@ class Sprite {
      * @param z     z coordinate of the vertex
      */
     public function curveVertex(x:Float, y:Float, ?z:Float) {
+        trace("Sprite.curveVertex() not implemented");
         throw "Sprite.curveVertex() not implemented";
     }
 
@@ -694,6 +705,7 @@ class Sprite {
      * smooth() will also improve image quality of resized images.
      */
     public function smooth() {
+        trace("Sprite.smooth() not implemented");
         throw "Sprite.smooth() not implemented";
     }
     
@@ -703,6 +715,7 @@ class Sprite {
      * Draws all geometry with jagged (aliased) edges.
      */
     public function noSmooth() {
+        trace("Sprite.noSmooth() not implemented");
         throw "Sprite.noSmooth() not implemented";
     }
     
@@ -719,6 +732,7 @@ class Sprite {
      * @param mode   	Either MITER, BEVEL, or ROUND
      */
     public function strokeJoin(?mode:Dynamic) {
+        trace("Sprite.strokeJoin() not implemented");
         throw "Sprite.strokeJoin() not implemented";
     }
     
@@ -734,6 +748,7 @@ class Sprite {
      * @param mode  Either SQUARE, PROJECT, or ROUND
      */
     public function strokeCap(?mode:Dynamic) {
+        trace("Sprite.strokeCap() not implemented");
         throw "Sprite.strokeCap() not implemented";
     }
 
@@ -754,6 +769,7 @@ class Sprite {
      * @param mode  Either CENTER, RADIUS, CORNER, or CORNERS.
      */
     public function ellipseMode(?mode:Dynamic) {
+        trace("Sprite.ellipseMode() not implemented");
         throw "Sprite.ellipseMode() not implemented";
     }
     
@@ -777,6 +793,7 @@ class Sprite {
      * @param mode  Either CORNER, CORNERS, CENTER, or RADIUS
      */
     public function rectMode(?mode:Dynamic) {
+        trace("Sprite.rectMode() not implemented");
         throw "Sprite.rectMode() not implemented";
     }
     
@@ -827,7 +844,8 @@ class Sprite {
      */
     public function colorMode(mode:Dynamic, ?range:Float, ?range1:Float,
         ?range2:Float, ?range3:Float, ?range4:Float) {
-        
+
+        trace("Sprite.colorMode() not implemented");
         throw "Sprite.colorMode() not implemented";
     }
     
@@ -944,19 +962,19 @@ class Sprite {
      *  when (graphics is a String):        reflect the string
      *  when (graphics is a GraphicsType):  instance that type
      */
-    private function initializeGraphics(graphics:Dynamic) : Graphics {
+    private function initializeGraphics(graphics:Dynamic, width:Int, height:Int) : Graphics {
         try {
             if(graphics == null) {
                 graphics = this.graphicsClass;
             }
 
             if(String == Type.getClass(graphics)) {
-                return Type.createInstance(Type.resolveClass(graphics), [this]);
+                return Type.createInstance(Type.resolveClass(graphics), [this, width, height]);
             }
 
             #if neko
             switch(cast(graphics, GraphicType)) {
-                case MOCK: return new MockGraphics(this);
+                case MOCK: return new MockGraphics(this, width, height);
             }
             #end
             

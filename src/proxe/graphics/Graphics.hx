@@ -56,6 +56,12 @@ class Graphics {
     // Temporary Methods
     public function background(color:Color) {
         trace("Graphics.background() should not be called.");
+        throw("Graphics.background() should not be called.");
+    }
+
+    public function point(x:Float, y:Float, ?z:Float) {
+        trace("Graphics.point() should not be called.");
+        throw("Graphics.point() should not be called.");
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -184,6 +190,18 @@ class Graphics {
         vertex(x+width, y+height);
         vertex(x, y+height);
         endShape(CLOSE);
+    }
+
+    /**
+     * TODO: Only handles 2D lines
+     */
+    public function line(x1:Float, y1:Float, z1:Float,
+        x2:Float, ?y2:Float, ?z2:Float) {
+
+        beginShape(LINES);
+        vertex(x1, y1);
+        vertex(z1, x2);
+        endShape();
     }
 
     ////////////////////////////////////////////////////////////////////////////

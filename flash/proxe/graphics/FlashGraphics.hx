@@ -12,11 +12,17 @@ class FlashGraphics extends Graphics {
     private var graphics : flash.display.Graphics;
  
     private var sprite:Sprite;
+
+    private var width:Int;
+    private var height:Int;
     
-    public function new(sprite:Sprite) {
+    public function new(sprite:Sprite, width:Int, height:Int) {
         this.sprite = sprite;
+
+        this.width = width;
+        this.height = height;
         
-        flash = createMovieClip();
+        flash = createMovieClip(width, height);
         graphics = flash.graphics;
     }
     
@@ -32,7 +38,8 @@ class FlashGraphics extends Graphics {
         
         strokeColor = Color.NONE;
         fillColor = backgroundColor;
-        rect(-1, -1, 401, 301);
+
+        rect(0, 0, width, height);
         
         fillColor = origFillColor;
         strokeColor = origStrokeColor;
@@ -63,13 +70,27 @@ class FlashGraphics extends Graphics {
 
         graphics.endFill();
     }
+
+    public function point(x:Float, y:Float, ?z:Float) {
+        var oldFill:Color = fillColor;
+        var oldStroke:Color = strokeColor;
+
+        fillColor = strokeColor;
+        strokeColor = Color.NONE;
+        rect(x, y, 1, 1);
+
+        fillColor = oldFill;
+        strokeColor = oldStroke;
+    }
     
 
-    private function createMovieClip(?parent:MovieClip) : MovieClip {
+    private function createMovieClip(width:Int, height:Int, ?parent:MovieClip) : MovieClip {
         if(parent == null) {
             parent = Lib.current;
         }
         var mc:MovieClip = new MovieClip();
+        //mc.width = width;
+        //mc.height = height;
         parent.addChild(mc);
         return mc;
     }
