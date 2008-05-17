@@ -1,6 +1,7 @@
 package proxe.graphics;
 
 import flash.Lib;
+import flash.events.Event;
 import flash.display.MovieClip;
 
 import proxe.Color;
@@ -25,6 +26,18 @@ class FlashGraphics extends Graphics {
         flash = createMovieClip(width, height);
         graphics = flash.graphics;
     }
+
+    public function play() {
+        var me = this;
+        flash.Lib.current.addEventListener(Event.ENTER_FRAME, function(_) {
+            me.sprite.draw();
+        });
+        flash.play();
+    }
+
+    public function stop() {
+        flash.stop();
+    }
     
     /**
      * TODO: closures would be perfect here for restoring state variables
@@ -43,6 +56,21 @@ class FlashGraphics extends Graphics {
         
         fillColor = origFillColor;
         strokeColor = origStrokeColor;
+    }
+
+    public function drawEllipse(x:Float, y:Float, width:Float, height:Float) {
+        if(!fillColor.equals(Color.NONE)) {
+            graphics.beginFill(rgb(fillColor), alpha(fillColor));
+        }
+
+        if(!strokeColor.equals(Color.NONE)) {
+            graphics.lineStyle(strokeWidth, rgb(strokeColor), alpha(strokeColor));
+        } else {
+            graphics.lineStyle();
+        }
+
+        graphics.drawEllipse(x, y, width, height);
+        graphics.endFill();
     }
 
     public function drawVertices(verticies:Array<Array<Float>>,

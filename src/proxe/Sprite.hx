@@ -7,6 +7,7 @@ import proxe.graphics.Graphics;
 #if neko
 import proxe.graphics.MockGraphics;
 #else flash9
+import flash.events.Event;
 import proxe.graphics.FlashGraphics;
 #end
 
@@ -21,6 +22,10 @@ class Sprite {
     
     ////////////////////////////////////////////////////////////////////////////
     // Public Fields
+
+    public static inline var PI:Float = 3.14159;
+    public static inline var TWO_PI:Float = PI * 2;
+    public static inline var HALF_PI:Float = PI/2;
 
     /**
      * @Processing:
@@ -100,7 +105,7 @@ class Sprite {
         height = 100;
 
         framesPerSecond = 60;
-        looping = false;
+        looping = true;
         frameCount = 0;
         
         #if flash9
@@ -128,7 +133,11 @@ class Sprite {
 
     public function init() {
         setup();
-        start();
+        draw();
+
+        if(looping) {        
+            start();
+        }
     }
 
     public function start() {
@@ -151,12 +160,18 @@ class Sprite {
             }
         }
         #else flash9
-        draw();
+        if(looping) {
+            cast(graphics, FlashGraphics).play();
+        }
         #end
     }
 
     public function stop() {
         looping = false;
+
+        #if flash9
+        cast(graphics, FlashGraphics).stop();
+        #end
     }
     
     ////////////////////////////////////////////////////////////////////////////
@@ -289,8 +304,11 @@ class Sprite {
      * continuously called anyway.
      */
     public function redraw() {
-        trace("Sprite.redraw() not implemented");
-        throw "Sprite.redraw() not implemented";
+        if(!looping) {
+            start();
+            draw();
+            stop();
+        }
     }
     
     ////////////////////////////////////////////////////////////////////////////
@@ -307,7 +325,7 @@ class Sprite {
      */
     public function frameRate(fps:Int) {
         trace("Sprite.frameRate() not implemented");
-        throw "Sprite.frameRate() not implemented";
+        //throw "Sprite.frameRate() not implemented";
     }
 
     /**
@@ -453,8 +471,7 @@ class Sprite {
      * @param height    height of the ellipse
      */
     public function ellipse(x:Float, y:Float, width:Float, height:Float) {
-        trace("Sprite.ellipse() not implemented!");
-        throw "Sprite.ellipse() not implemented!";
+        graphics.ellipse(x, y, width, height);
     }
     
     /**
@@ -768,9 +785,8 @@ class Sprite {
      *
      * @param mode  Either CENTER, RADIUS, CORNER, or CORNERS.
      */
-    public function ellipseMode(?mode:Dynamic) {
-        trace("Sprite.ellipseMode() not implemented");
-        throw "Sprite.ellipseMode() not implemented";
+    public function ellipseMode(mode:EllipseMode) {
+        graphics.ellipseMode = mode;
     }
     
     /**
@@ -940,6 +956,7 @@ class Sprite {
 
     ////////////////////////////////////////////////////////////////////////////
     // Math Methods
+    
     public function random(?min:Float, ?max:Float):Float {
         if(min == null) {
             if(max == null) {
@@ -949,6 +966,18 @@ class Sprite {
         }
         var diff:Float = (max - min);
         return (Math.random() * diff) + min;
+    }
+
+    public function int(x:Float) : Int {
+        return Math.floor(x);
+    }
+
+    public inline function cos(x:Float) : Float {
+        return Math.cos(x);
+    }
+
+    public inline function sin(x:Float) : Float {
+        return Math.sin(x);
     }
     
     ////////////////////////////////////////////////////////////////////////////

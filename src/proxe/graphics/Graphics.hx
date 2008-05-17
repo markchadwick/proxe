@@ -22,6 +22,13 @@ enum ShapeClosingType {
     CLOSE;
 }
 
+enum EllipseMode {
+    CENTER;
+    RADIUS;
+    CORNER;
+    CORNERS;
+}
+
 class Graphics {
 
     /**
@@ -52,6 +59,8 @@ class Graphics {
     private var strokeColor:Color;
     private var strokeWidth:Float;
 
+    public var ellipseMode:EllipseMode;
+
     ////////////////////////////////////////////////////////////////////////////
     // Temporary Methods
     public function background(color:Color) {
@@ -62,6 +71,27 @@ class Graphics {
     public function point(x:Float, y:Float, ?z:Float) {
         trace("Graphics.point() should not be called.");
         throw("Graphics.point() should not be called.");
+    }
+
+    public function ellipse(x:Float, y:Float, width:Float, height:Float) {
+        if(ellipseMode == null) {
+            ellipseMode = CENTER;
+        }
+        
+        switch ellipseMode {
+            case CENTER:
+                drawEllipse(x-(width/2), y-(height/2), width, height);
+            case CORNER:
+                drawEllipse(x, y, width, height);
+            default:
+                trace("Unknown ellipseMode: "+ ellipseMode);
+                throw("Unknown ellipseMode: "+ ellipseMode);
+        }
+    }
+
+    public function drawEllipse(x:Float, y:Float, width:Float, height:Float) {
+        trace("drawEllipse not implemented");
+        throw("drawEllipse not implemented");
     }
 
     ////////////////////////////////////////////////////////////////////////////
