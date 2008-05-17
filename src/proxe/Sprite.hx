@@ -6,6 +6,8 @@ import proxe.graphics.Graphics;
 
 #if neko
 import proxe.graphics.MockGraphics;
+#else flash9
+import proxe.graphics.FlashGraphics;
 #end
 
 class Sprite {
@@ -68,6 +70,10 @@ class Sprite {
      */
     public var screen:Dynamic;
 
+    public var fillColor:Color;
+    public var strokeColor:Color;
+    public var strokeWidth:Float;
+
     ////////////////////////////////////////////////////////////////////////////
     // Private Fields
 
@@ -98,12 +104,14 @@ class Sprite {
         frameCount = 0;
         
         #if flash9
-        trace("Flash 9!");
         graphicsClass = "proxe.graphics.FlashGraphics";
-        #else
-        trace("Other :(");
+        #else true
         graphicsClass = "proxe.graphics.Graphics";
         #end
+
+        fillColor = Color.resolve(255);
+        strokeColor = Color.resolve(0);
+        strokeWidth = 1;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -125,7 +133,8 @@ class Sprite {
 
     public function start() {
         looping = true;
-        
+
+        #if neko
         var startTime:Float;
         var diff:Float;
 
@@ -141,6 +150,9 @@ class Sprite {
                 neko.Sys.sleep(diff);
             }
         }
+        #else flash9
+        draw();
+        #end
     }
 
     public function stop() {
@@ -203,6 +215,8 @@ class Sprite {
         this.height = height;
 
         this.graphics = initializeGraphics(graphics);
+        this.graphics.fill(fillColor);
+        this.graphics.stroke(strokeColor);
     }
 
     /**
@@ -331,8 +345,8 @@ class Sprite {
     public function triangle(x1:Float, y1:Float,
         x2:Float, y2:Float,
         x3:Float, y3:Float) {
-        
-        throw "Sprite.triangle() not implemented";
+
+        graphics.triangle(x1, y1, x2, y2, x3, y3);
     }
     
     /**
@@ -451,7 +465,7 @@ class Sprite {
      * @param height    height of the rectangle
      */
     public function rect(x:Float, y:Float, width:Float, height:Float) {
-        throw "Sprite.rect() not implemented";
+        graphics.rect(x, y, width, height);
     }
     
     ////////////////////////////////////////////////////////////////////////////
@@ -548,8 +562,12 @@ class Sprite {
      * @param mode      Either POINTS, LINES, TRIANGLES, TRIANGLE_FAN,
      *                  TRIANGLE_STRIP, QUADS, QUAD_STRIP
      */
-    public function beginShape(?mode:Dynamic) {
-        throw "Sprite.beginShape() not implemented";
+    public function beginShape(?mode:ShapeType) {
+        if(mode == null) {
+            mode = POLYGON;
+        }
+        
+        graphics.beginShape(mode);
     }
     
     /**
@@ -563,8 +581,8 @@ class Sprite {
      *
      * @param mode       Use CLOSE to close the shape
      */
-    public function endShape(?mode:Dynamic) {
-        throw "Sprite.endShape() not implemented";
+    public function endShape(?mode:ShapeClosingType) {
+        graphics.endShape(mode);
     }
     
     /**
@@ -661,7 +679,8 @@ class Sprite {
      * @param width     stroke width
      */
     public function strokeWeight(strokeWidth:Float) {
-        throw "Sprite.strokeWeight() not implemented";
+        this.strokeWidth = strokeWidth;
+        graphics.strokeWeight(this.strokeWidth);
     }
     
     /**
@@ -784,7 +803,7 @@ class Sprite {
      * @param blue
      */
     public function background(red:Int, ?green:Int, ?blue:Int) {
-        throw "Sprite.background() not implemented";
+        graphics.background(Color.resolve(red, green, blue));
     }
     
     /**
@@ -839,7 +858,8 @@ class Sprite {
      * @param alpha
      */
     public function stroke(red:Int, ?green:Int, ?blue:Int, ?alpha:Int) {
-        throw "Sprite.stroke() not implemented";
+        this.strokeColor = Color.resolve(red, green, blue, alpha);
+        graphics.stroke(this.strokeColor);
     }
     
     /**
@@ -849,7 +869,8 @@ class Sprite {
      * are called, nothing will be drawn to the screen.
      */
     public function noStroke() {
-        throw "Sprite.noStroke() not implemented";
+        this.strokeColor = Color.NONE;
+        graphics.stroke(this.strokeColor);
     }
     
     /**
@@ -881,7 +902,8 @@ class Sprite {
      * @param alpha
      */
     public function fill(red:Int, ?green:Int, ?blue:Int, ?alpha:Int) {
-        throw "Sprite.fill() not implemented";
+        this.fillColor = Color.resolve(red, green, blue, alpha);
+        graphics.fill(this.fillColor);
     }
     
     /**
@@ -891,12 +913,25 @@ class Sprite {
      * nothing will be drawn to the screen.
      */
     public function noFill() {
-        throw "Sprite.noFill() not implemented";
+        this.fillColor = Color.NONE;
+        graphics.fill(this.fillColor);
     }
 
     ////////////////////////////////////////////////////////////////////////////
     // Color Creating and Reading Methods
-    
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Math Methods
+    public function random(?min:Float, ?max:Float):Float {
+        if(min == null) {
+            if(max == null) {
+                return Math.random();
+            }
+            return Math.random() * min;
+        }
+        var diff:Float = (max - min);
+        return (Math.random() * diff) + min;
+    }
     
     ////////////////////////////////////////////////////////////////////////////
     // Private methods
@@ -926,6 +961,7 @@ class Sprite {
             #end
             
         } catch(e:Dynamic) {
+            trace("Unknown Graphics Type: "+ graphics);
             throw "Unknown Graphics Type: "+ graphics;
         }
         return null;

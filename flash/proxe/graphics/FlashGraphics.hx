@@ -4,20 +4,17 @@ import flash.Lib;
 import flash.display.MovieClip;
 
 import proxe.Color;
+import proxe.Sprite;
 import proxe.graphics.Graphics;
 
 class FlashGraphics extends Graphics {
     private var flash:MovieClip;
     private var graphics : flash.display.Graphics;
+ 
+    private var sprite:Sprite;
     
-    private var shapeVerts:Int;
-    
-    public var fillColor:Color;
-    public var strokeColor:Color;
-    public var strokeWeight:Float;
-    
-    public function new() {
-        super();
+    public function new(sprite:Sprite) {
+        this.sprite = sprite;
         
         flash = createMovieClip();
         graphics = flash.graphics;
@@ -40,16 +37,30 @@ class FlashGraphics extends Graphics {
         fillColor = origFillColor;
         strokeColor = origStrokeColor;
     }
-    
-    public function rect(x:Float, y:Float, width:Float, height:Float) {
-        //if(strokeColor != Color.NONE) {
-            //trace("no Stroke!");
-            //graphics.lineStyle(strokeWeight, rgb(strokeColor), alpha(strokeColor));
-        //}
+
+    public function drawVertices(verticies:Array<Array<Float>>,
+        openShapeType:ShapeType, closeShapeType:ShapeClosingType) {
+
+        if(closeShapeType == CLOSE && !fillColor.equals(Color.NONE)) {
+            graphics.beginFill(rgb(fillColor), alpha(fillColor));
+        }
+
+        if(!strokeColor.equals(Color.NONE)) {
+            graphics.lineStyle(strokeWidth, rgb(strokeColor), alpha(strokeColor));
+        } else {
+            graphics.lineStyle();
+        }
         
-        graphics.lineStyle(1, 0x000000);
-        graphics.beginFill(rgb(fillColor), alpha(fillColor));
-        graphics.drawRect(x, y, width, height);
+        var vertsDrawn:Int = 0;
+        for(vertex in vertices) {
+            if(vertsDrawn == 0) {
+                graphics.moveTo(vertex[0], vertex[1]);
+            } else {
+                graphics.lineTo(vertex[0], vertex[1]);
+            }
+            vertsDrawn++;
+        }
+
         graphics.endFill();
     }
     

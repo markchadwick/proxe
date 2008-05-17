@@ -11,6 +11,7 @@ import proxe.graphics.MockGraphics;
 
 class SpriteTest extends TestCase {
     static var SLEEP_TIME:Float = 0.1;
+    
     var sprite:MockSprite;
     
     public function setup() {
@@ -40,7 +41,7 @@ class SpriteTest extends TestCase {
 
     public function testDefaultGraphicsClass() {
         var s:Sprite = new Sprite();
-
+        
         assertEquals("proxe.graphics.Graphics", s.graphicsClass);
     }
 
@@ -51,10 +52,24 @@ class SpriteTest extends TestCase {
     public function testFrameCount() {
         assertEquals(0, sprite.frameCount);
     }
-    
-    public function testScreen() {
-        assertTrue(sprite.screen != null);
+
+    public function testDefaultBackgroundColor() {
+        var white:Color = Color.resolve(255);
+        assertTrue(white.equals(sprite.backgroundColor));
     }
+
+    public function testDefaultStrokeColor() {
+        var black:Color = Color.resolve(0);
+        assertTrue(black.equals(sprite.strokeColor));
+    }
+
+    public function testDefaultStrokeWeight() {
+        assertEquals(1.0, sprite.strokeWidth);
+    }
+    
+    //public function testScreen() {
+        //assertTrue(sprite.screen != null);
+    //}
 
     ////////////////////////////////////////////////////////////////////////////
     // "Structure" Tests -- http://processing.org/reference/index.html
@@ -164,170 +179,199 @@ class SpriteTest extends TestCase {
         assertEquals(null, sprite.setupCount);
     }
     
-    public function testDelay() {
-        var t = Timer.stamp();
-        sprite.delay(100);
-        assertTrue((Timer.stamp() - t) > 100);
-    }
+    //public function testDelay() {
+        //var t = Timer.stamp();
+        //sprite.delay(100);
+        //assertTrue((Timer.stamp() - t) > 100);
+    //}
     
     ////////////////////////////////////////////////////////////////////////////
     // Shape Methods - 2D
     
     public function testTriangle() {
+        sprite.size(100, 100);
+        var graphics:MockGraphics = cast(sprite.graphics, MockGraphics);
         sprite.triangle(0, 0, 0, sprite.width, sprite.height, 0);
+
+
+        var verts:Array<Array<Float>> = graphics.getVertices();
+        assertEquals(4, verts.length);
+
+        
     }
     
-    public function testLine2D() {
-        sprite.line(0, 0, sprite.width, sprite.height);
-    }
+    //public function testLine2D() {
+        //sprite.line(0, 0, sprite.width, sprite.height);
+    //}
     
-    public function testLine3D() {
-        sprite.line(0, 0, 10, sprite.width, sprite.height, -10);
-    }
+    //public function testLine3D() {
+        //sprite.line(0, 0, 10, sprite.width, sprite.height, -10);
+    //}
     
-    public function testArc() {
-        sprite.arc(
-            sprite.width/2, sprite.height/2,
-            sprite.width/4, sprite.height/4,
-            0, Math.PI);
-    }
+    //public function testArc() {
+        //sprite.arc(
+            //sprite.width/2, sprite.height/2,
+            //sprite.width/4, sprite.height/4,
+            //0, Math.PI);
+    //}
     
-    public function testPoint2D() {
-        sprite.point(10, 10);
-    }
+    //public function testPoint2D() {
+        //sprite.point(10, 10);
+    //}
     
-    public function testPoint3D() {
-        sprite.point(10, 10, 10);
-    }
+    //public function testPoint3D() {
+        //sprite.point(10, 10, 10);
+    //}
     
-    public function testQuad() {
-        sprite.quad(
-            0, 0,
-            sprite.width, 0,
-            sprite.width, sprite.height,
-            0, sprite.height
-        );
-    }
+    //public function testQuad() {
+        //sprite.quad(
+            //0, 0,
+            //sprite.width, 0,
+            //sprite.width, sprite.height,
+            //0, sprite.height
+        //);
+    //}
     
-    public function testEllipse() {
-        sprite.ellipse(10, 10, 10, 10);
-    }
+    //public function testEllipse() {
+        //sprite.ellipse(10, 10, 10, 10);
+    //}
     
-    public function testRect() {
-        sprite.rect(10, 10, 10, 10);
-    }
+    //public function testRect() {
+        //sprite.rect(10, 10, 10, 10);
+    //}
     
     ////////////////////////////////////////////////////////////////////////////
     // Curve Shape Methods
     
-    public function testCurve() {
-        sprite.curve(
-            1, 2, 3,
-            4, 5, 6,
-            7, 8, 9,
-            10, 11, 12
-        );
-    }
+    //public function testCurve() {
+        //sprite.curve(
+            //1, 2, 3,
+            //4, 5, 6,
+            //7, 8, 9,
+            //10, 11, 12
+        //);
+    //}
     
-    public function testBeizer() {
-        sprite.bezier(
-            1, 2, 3,
-            4, 5, 6,
-            7, 8, 9,
-            10, 11, 12
-        );
-    }
+    //public function testBeizer() {
+        //sprite.bezier(
+            //1, 2, 3,
+            //4, 5, 6,
+            //7, 8, 9,
+            //10, 11, 12
+        //);
+    //}
     
     ////////////////////////////////////////////////////////////////////////////
     // Vertex Shape Methods
-    
-    public function testBeginShape() {
-        sprite.beginShape();
-    }
-    
-    public function testEndShape() {
+
+    public function testBeginShapeGivenParam() {
+        sprite.size(100, 200, MOCK);
+        var graphics:MockGraphics = cast(sprite.graphics, MockGraphics);
+
+        sprite.beginShape(LINES);
+        assertEquals(LINES, graphics.currentShapeType);
+
         sprite.endShape();
+        assertEquals(null, graphics.currentShapeType);
     }
     
-    public function testVertex() {
-        sprite.vertex(1, 2);
+    public function testBeginShapeDefaultParam() {
+        sprite.size(100, 200, MOCK);
+        var graphics:MockGraphics = cast(sprite.graphics, MockGraphics);
+        
+        sprite.beginShape();
+        assertEquals(POLYGON, graphics.currentShapeType);
+
+        sprite.endShape();
+        assertEquals(null, graphics.currentShapeType);
     }
     
-    public function testBezierVertex() {
-        sprite.bezierVertex(1, 2, 3, 4, 5, 6, 7, 8, 9);
-    }
+    //public function testEndShape() {
+        //sprite.size(100, 200, MOCK);
+        //var graphics:MockGraphics = cast(sprite.graphics, MockGraphics);
+        //sprite.endShape();
+        //assertTrue(false);
+    //}
     
-    public function testCurveVertex() {
-        sprite.curveVertex(10, 10);
-        sprite.curveVertex(10, 10, 10);
-    }
+    //public function testVertex() {
+        //sprite.vertex(1, 2);
+    //}
     
-    ////////////////////////////////////////////////////////////////////////////
-    // Shape Attribute Method Tests
+    //public function testBezierVertex() {
+        //sprite.bezierVertex(1, 2, 3, 4, 5, 6, 7, 8, 9);
+    //}
     
-    public function testStrokeWeight() {
-        sprite.strokeWeight(10);
-    }
+    //public function testCurveVertex() {
+        //sprite.curveVertex(10, 10);
+        //sprite.curveVertex(10, 10, 10);
+    //}
     
-    public function testStrokeJoin() {
-        sprite.strokeJoin();
-    }
+    //////////////////////////////////////////////////////////////////////////////
+    //// Shape Attribute Method Tests
     
-    public function testStrokeCap() {
-        sprite.strokeCap();
-    }
+    //public function testStrokeWeight() {
+        //sprite.strokeWeight(10);
+    //}
     
-    public function testEllipseMode() {
-        sprite.ellipseMode();
-    }
+    //public function testStrokeJoin() {
+        //sprite.strokeJoin();
+    //}
     
-    public function testRectMode() {
-        sprite.rectMode();
-    }
+    //public function testStrokeCap() {
+        //sprite.strokeCap();
+    //}
+    
+    //public function testEllipseMode() {
+        //sprite.ellipseMode();
+    //}
+    
+    //public function testRectMode() {
+        //sprite.rectMode();
+    //}
     
     ////////////////////////////////////////////////////////////////////////////
     // Color Method Tests
-    
-    public function testBackground() {
-        sprite.background(0);
-    }
-    
-    public function testColorMode() {
-        sprite.colorMode(0);
-    }
-    
-    public function testStroke() {
-        sprite.stroke(100);
-    }
-    
-    public function testNoStroke() {
-        sprite.noStroke();
-    }
-    
-    public function testFill() {
-        sprite.fill(100);
-    }
-    
-    public function testNoFill() {
-        sprite.noFill();
-    }
-    
-    ////////////////////////////////////////////////////////////////////////////
-    // Color Creating and Reading Methods
-    
-    public function testRed() {
-        assertTrue(true);
-    }
 
-    public function testGreen() {
-        assertTrue(true);
-    }
-
-    public function testBlue() {
-        assertTrue(true);
-    }
+    //public function testBackground() {
+        //sprite.background(0);
+    //}
     
-    public function testAlpha() {
-        assertTrue(true);
-    }
+    //public function testColorMode() {
+        //sprite.colorMode(0);
+    //}
+    
+    //public function testStroke() {
+        //sprite.stroke(100);
+    //}
+    
+    //public function testNoStroke() {
+        //sprite.noStroke();
+    //}
+    
+    //public function testFill() {
+        //sprite.fill(100);
+    //}
+    
+    //public function testNoFill() {
+        //sprite.noFill();
+    //}
+    
+    //////////////////////////////////////////////////////////////////////////////
+    //// Color Creating and Reading Methods
+    
+    //public function testRed() {
+        //assertTrue(true);
+    //}
+
+    //public function testGreen() {
+        //assertTrue(true);
+    //}
+
+    //public function testBlue() {
+        //assertTrue(true);
+    //}
+    
+    //public function testAlpha() {
+        //assertTrue(true);
+    //}
 }

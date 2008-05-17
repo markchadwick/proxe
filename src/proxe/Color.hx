@@ -70,4 +70,12 @@ class Color {
     public function toString() : String {
         return "<Color: r:"+ red +" g:"+ green +" b:"+ blue +" a:"+ alpha +">";
     }
+
+    public function equals(other:Color) : Bool {
+        return(
+            this.red == other.red &&
+            this.green == other.green &&
+            this.blue == other.blue &&
+            this.alpha == other.alpha);
+    }
 }

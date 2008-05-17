@@ -1,6 +1,6 @@
 -cp src
 -cp test
 -prompt
--neko proxe.n
+-neko build/proxe_tests.n
 -main ProxeTests
--cmd neko proxe.n
+-cmd neko build/proxe_tests.n
