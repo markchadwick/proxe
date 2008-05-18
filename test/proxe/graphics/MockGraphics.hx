@@ -10,7 +10,7 @@ class MockGraphics extends Graphics {
     public var width:Int;
     public var height:Int;
 
-    public function new(sprite:Sprite, width:Int, height:int) {
+    public function new(sprite:Sprite, width:Int, height:Int) {
         this.sprite = sprite;
         this.width = width;
         this.height = height;

@@ -75,6 +75,10 @@ class Sprite {
      */
     public var screen:Dynamic;
 
+
+    public var mouseX:Int;
+    public var mouseY:Int;
+
     public var fillColor:Color;
     public var strokeColor:Color;
     public var strokeWidth:Float;
@@ -117,6 +121,9 @@ class Sprite {
         fillColor = Color.resolve(255);
         strokeColor = Color.resolve(0);
         strokeWidth = 1;
+
+        mouseX = 0;
+        mouseY = 0;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -968,7 +975,7 @@ class Sprite {
         return (Math.random() * diff) + min;
     }
 
-    public function int(x:Float) : Int {
+    public inline function int(x:Float) : Int {
         return Math.floor(x);
     }
 
@@ -979,7 +986,48 @@ class Sprite {
     public inline function sin(x:Float) : Float {
         return Math.sin(x);
     }
+
+    public inline function abs(x:Dynamic) : Float {
+        return Math.abs(x);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Matrix Methods
+
+    public function pushMatrix() {
+        graphics.pushMatrix();
+    }
+
+    public function popMatrix() {
+        graphics.popMatrix();
+    }
+
+    public function translate(x:Float, y:Float, ?z:Float) {
+        trace("translate() not implemented");
+        throw("translate() not implemented");
+    }
+
+    public function rotateX(deg:Float) {
+        trace("rotateX not implemented");
+        throw("rotateX not implemented");
+    }
+
+    public function rotateY(deg:Float) {
+        trace("rotateY not implemented");
+        throw("rotateY not implemented");
+    }
+
+    public function rotateZ(deg:Float) {
+        trace("rotateZ not implemented");
+        throw("rotateZ not implemented");
+    }
+
+    public function scale(factor:Float) {
+        trace("scale not implemented");
+        throw("scale not implemented");
+    }
     
+
     ////////////////////////////////////////////////////////////////////////////
     // Private methods
 

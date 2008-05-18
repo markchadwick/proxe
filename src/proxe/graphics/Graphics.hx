@@ -249,6 +249,35 @@ class Graphics {
     }
 
     ////////////////////////////////////////////////////////////////////////////
+    // Matrix Methods
+    public function pushMatrix() {
+        if (matrixStackDepth+1 == MATRIX_STACK_DEPTH) {
+            trace("too many calls to pushMatrix()");
+            throw("too many calls to pushMatrix()");
+        }
+        //float mat[] = matrixStack[matrixStackDepth];
+        var mat:Array<Float> = matrixStack[matrixStackDepth];
+        
+        // mat[0] = m00;
+        // mat[1] = m01; mat[2] = m02;
+        mat[0] =
+    mat[3] = m10; mat[4] = m11; mat[5] = m12;
+    matrixStackDepth++;
+  }
+
+
+  public function popMatrix() {
+    if (matrixStackDepth == 0) {
+      throw new RuntimeException("too many calls to popMatrix() " +
+                                 "(and not enough to pushMatrix)");
+    }
+    matrixStackDepth--;
+    float mat[] = matrixStack[matrixStackDepth];
+    m00 = mat[0]; m01 = mat[1]; m02 = mat[2];
+    m10 = mat[3]; m11 = mat[4]; m12 = mat[5];
+  }
+
+    ////////////////////////////////////////////////////////////////////////////
     // Abstract Methods
     public function drawVertices(verticies:Array<Array<Float>>,
         openShapeType:ShapeType, closeShapeType:ShapeClosingType) {

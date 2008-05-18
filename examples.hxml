@@ -86,3 +86,13 @@
 -swf examples/structure/objects/index.swf
 -swf-header 200:200:40:FFFFFF
 -main Objects
+
+
+--next
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/3d_form/rgb_cube/
+-swf examples/3d_form/rgb_cube/index.swf
+-swf-header 200:200:40:FFFFFF
+-main RGBCube
