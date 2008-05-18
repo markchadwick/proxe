@@ -14,11 +14,18 @@ import proxe.Applet;
 class Coordinates extends Applet {
   
   public function setup() {
+    trace("Setup!");
     // Sets the screen to be 200, 200, so the width of the window is 200 pixels
     // and the height of the window is 200 pixels
     size(400, 400);
+    
+    trace("Background");
     background(0);
+    
+    trace("no Fill!");
     noFill();
+    
+    trace("stroke(255)");
     stroke(255);
 
     // The two parameters of the point() method each specify coordinates.
@@ -49,6 +56,7 @@ class Coordinates extends Applet {
   }
 
   public static function main() {
+    trace("Main!");
     new Coordinates().setup();
   }
 }

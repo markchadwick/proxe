@@ -32,7 +32,7 @@ class Color {
      *  (r:0, g:255, b:0, a:255)    => 0xff00ff00
      *  (r:255, g:-1, b:1000, a:128)=> 0x80ff00ff
      */
-    public static inline function pack(r:Int, g:Int, b:Int, a:Int) : Int {
+    public static function pack(r:Int, g:Int, b:Int, a:Int) : Int {
         r = (r < 0) ? 0 : (r > 255) ? 255 : r;
         g = (g < 0) ? 0 : (g > 255) ? 255 : g;
         b = (b < 0) ? 0 : (b > 255) ? 255 : b;
@@ -42,7 +42,7 @@ class Color {
     }
 
     public function toInt() : Int {
-        return Color.pack(red, green, blue, 0);
+        return pack(this.red, this.green, this.blue, 0);
     }
 
     /**

@@ -18,11 +18,24 @@ enum ShapeType {
     QUADS;
     POINTS;
     LINES;
+    TRIANGLES;
 }
 
 enum ShapeClosingType {
     OPEN;
     CLOSE;
+}
+
+enum Hint {
+  ENABLE_OPENGL_2X_SMOOTH;
+  ENABLE_OPENGL_4X_SMOOTH;
+  ENABLE_NATIVE_FONTS;
+  DISABLE_DEPTH_TEST;
+  DISABLE_FLYING_POO;
+  ENABLE_DEPTH_SORT;
+  DISABLE_ERROR_REPORT;
+  ENABLE_ACCURATE_TEXTURES;
+  DISABLE_AUTO_GZIP;
 }
 
 class Graphics extends Image {
@@ -219,10 +232,35 @@ class Graphics extends Image {
     public var insideResize:Bool;
 
     public var raw:Graphics;
+    
+    /**
+     * Array of hint[] items. These are hacks to get around various temporary
+     * workarounds inside the environment.
+     *
+     * Note that this array cannot be static, as a hint() may result in a
+     * runtime change specific to a renderer. For instance, calling
+     * hint(DISABLE_DEPTH_TEST) has to call glDisable() right away on an
+     * instance of PGraphicsOpenGL.
+     *
+     * The hints[] array is allocated early on because it might be used inside
+     * beginDraw(), allocate(), etc.
+     */
+//    protected boolean hints[] = new boolean[HINT_COUNT];
+    // TODO: Initialize to HINT_COUNT
+    public var hints:Hash<Bool>;
+
+    // total number of verticies
+    public var vertexCount:Int;
 
     public var backgroundColor:Color;
     public var fillColor:Color;
     public var strokeColor:Color;
+    
+    /**
+     * Type of shape passed to beginShape(),
+     * zero if no shape is currently being drawn.
+     */
+    public var shape:ShapeType;
 
     ////////////////////////////////////////////////////////////////////////////
     // Color Fields
@@ -340,7 +378,7 @@ class Graphics extends Image {
     // Drawing Methods
     public function background(color:Color) {
         clear();
-
+        
         if(color.alpha != 255) {
             color.alpha = 255;
         }
