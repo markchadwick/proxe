@@ -1,6 +1,31 @@
 package proxe.graphics;
 
-class Graphics {
+import proxe.Color;
+import proxe.graphics.Image;
+
+enum GraphicsType {
+    MOCK;
+}
+
+enum RectMode {
+    CORNERS;
+    CORNER;
+    RADIUS;
+    CENTER;
+}
+
+enum ShapeType {
+    QUADS;
+    POINTS;
+    LINES;
+}
+
+enum ShapeClosingType {
+    OPEN;
+    CLOSE;
+}
+
+class Graphics extends Image {
 
     ////////////////////////////////////////////////////////////////////////////
     // CONSTANTS
@@ -123,10 +148,10 @@ class Graphics {
 
     public static var TRI_DIFFUSE_R:Int = 0;
     public static var TRI_DIFFUSE_G:Int = 1;
-    public static var TRI_DIFFULE_B:Int = 2
+    public static var TRI_DIFFULE_B:Int = 2;
     public static var TRI_DIFFUSE_A:Int = 3;
 
-    public static var TRI_SPECULAR_A:Int = 4;
+    public static var TRI_SPECULAR_R:Int = 4;
     public static var TRI_SPECULAR_G:Int = 5;
     public static var TRI_SPECULAR_B:Int = 6;
     public static var TRI_SPECULAR_A:Int = 7;
@@ -159,6 +184,11 @@ class Graphics {
     // Instance Fields
 
     /**
+     * Depth buffer
+     */
+    public var zBuffer:Array<Float>;
+
+    /**
      * Width minus one (useful for many calculations)
      */
     public var width1:Int;
@@ -187,6 +217,12 @@ class Graphics {
      * True if in the midst of resize (no drawing can take place)
      */
     public var insideResize:Bool;
+
+    public var raw:Graphics;
+
+    public var backgroundColor:Color;
+    public var fillColor:Color;
+    public var strokeColor:Color;
 
     ////////////////////////////////////////////////////////////////////////////
     // Color Fields
@@ -238,5 +274,186 @@ class Graphics {
      * 
      * @default true
      */
-    private var colorRgb255:Bool;  
+    private var colorRgb255:Bool;
+
+    ////////////////////////////////////////////////////////////////////////////
+    // "Mode" variables
+    
+    private var currentRectMode:RectMode;
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Abstract Methods
+    public function allocate() {
+        trace("Abstract Method: Graphics.allocate()");
+        throw("Abstract Method: Graphics.allocate()");
+    }
+
+    public function clear() {
+        trace("Abstract Method: Graphics.clear()");
+        throw("Abstract Method: Graphics.clear()");
+    }
+
+    public function beginShape(?kind:ShapeType) {
+        trace("Abstract Method: Graphics.beginShape()");
+        throw("Abstract Method: Graphics.beginShape()");
+    }
+
+    public function vertex(x:Float, y:Float, ?z:Float, ?u:Float, ?v:Float) {
+        trace("Abstract Method: Graphics.vertex()");
+        throw("Abstract Method: Graphics.vertex()");
+    }
+
+    public function endShape(?mode:ShapeClosingType) {
+        trace("Abstract Method: Graphics.endShape()");
+        throw("Abstract Method: Graphics.endShape()");
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Public Methods
+    /**
+     * Called in repsonse to a resize event, handles setting the new width and
+     * height internally, as well as re-allocating the pixel buffer for the new
+     * size
+     *
+     * Note that this will nuke any camera settings.
+     */
+    public function resize(width:Int, height:Int) {
+        trace("resize("+ width +", "+ height +")");
+
+        insideDrawWait();
+
+        // Lock the draw
+        insideResize = true;
+
+        this.width = width;
+        this.height = height;
+        this.width1 = width - 1;
+        this.height1 = height - 1;
+
+        allocate();
+
+        // Okay to redraw
+        insideResize = false;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Drawing Methods
+    public function background(color:Color) {
+        clear();
+
+        if(color.alpha != 255) {
+            color.alpha = 255;
+        }
+
+        this.backgroundColor = color;
+        rect(0, 0, width, height);
+    }
+
+    public function rect(x:Float, y:Float, width:Float, height:Float) {
+        var hRadius:Float;
+        var vRadius:Float;
+        
+        switch(currentRectMode) {
+            case CORNERS:
+
+            case CORNER:
+                width += x;
+                height += y;
+
+            case RADIUS:
+                hRadius = width;
+                vRadius = height;
+
+                width  = x + hRadius;
+                height = y + vRadius;
+
+                x -= hRadius;
+                y -= vRadius;
+
+            case CENTER:
+                hRadius = height/2;
+                vRadius = width/2;
+
+                width  = x + hRadius;
+                height = y + vRadius;
+
+                x -= hRadius;
+                y -= vRadius;
+        }
+
+        if(x > width) {
+            var temp:Float = x;
+            x = width;
+            width = temp;
+        }
+
+        if(y > height) {
+            var temp:Float = y;
+            y = width;
+            width = temp;
+        }
+
+        rectImpl(x, y, width, height);
+    }
+
+    public function quad(x1:Float, y1:Float, x2:Float, y2:Float,
+                         x3:Float, y3:Float, x4:Float, y4:Float) {
+                         
+        beginShape(QUADS);
+        vertex(x1, y1);
+        vertex(x2, y2);
+        vertex(x3, y3);
+        vertex(x4, y4);
+        endShape();
+    }
+
+    public function fill(color:Color) {
+        this.fillColor = color;
+    }
+    
+    public function stroke(color:Color) {
+        this.strokeColor = color;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Shape Implementation Methods
+    
+    public function rectImpl(x1:Float, y1:Float, x2:Float, y2:Float) {
+        quad(x1, y1,  x2, y1,  x2, y2,  x1, y2);
+    }
+
+    public function point(x:Float, y:Float, ?z:Float) {
+        beginShape(POINTS);
+        vertex(x, y, z);
+        endShape();
+    }
+
+    public function line(x1:Float, y1:Float, z1:Float,
+                         x2:Float, ?y2:Float, ?z2:Float) {
+        if(y2 == null) {
+            beginShape(LINES);
+            vertex(x1, y1);
+            vertex(z1, x1);
+            endShape();
+        } else {
+            beginShape(LINES);
+            vertex(x1, y1, z1);
+            vertex(x2, y2, z2);
+            endShape();
+        }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Legacy Methods
+
+    private function insideDrawWait() {
+        /*
+        while (insideDraw) {
+            //System.out.println("waiting");
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException e) { }
+        }
+        */
+    }
 }

@@ -11,9 +11,9 @@
  *
  */
 
-import proxe.Sprite;
+import proxe.Applet;
 
-class StatementsAndComments extends Sprite {
+class StatementsAndComments extends Applet {
   
   public function setup() {
     // The size function is a statement that tells the computer 

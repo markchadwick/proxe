@@ -41,6 +41,10 @@ class Color {
         return (a << 24) | (r << 16) | (g << 8) | b;
     }
 
+    public function toInt() : Int {
+        return Color.pack(red, green, blue, 0);
+    }
+
     /**
      * Resolves a semi-variable list of integers from 0-255 into a single,
      * packed integer.  There are four different way to call this method.

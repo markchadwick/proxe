@@ -7,9 +7,9 @@
  * change with time.
  */
 
-import proxe.Sprite;
+import proxe.Applet;
 
-class SetupAndDraw extends Sprite {
+class SetupAndDraw extends Applet {
 
     var y:Float;
 
