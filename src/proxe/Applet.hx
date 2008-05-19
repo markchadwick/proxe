@@ -32,7 +32,7 @@ class Applet {
     /**
      * Current Graphics renderer.
      *
-     * @todo: implement "g" getter for Processing compatability
+     * @todo implement "g" getter for Processing compatability
      */
     public var graphics:Graphics;
     
