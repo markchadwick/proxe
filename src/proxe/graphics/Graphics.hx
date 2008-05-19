@@ -1,9 +1,14 @@
 package proxe.graphics;
 
+import proxe.Applet;
 import proxe.Color;
+import proxe.Vertex;
 
-enum GraphicType {
-    MOCK;
+enum ShapeMode {
+    CORNERS;
+    CORNER;
+    RADIUS;
+    CENTER;
 }
 
 enum ShapeType {
@@ -22,266 +27,312 @@ enum ShapeClosingType {
     CLOSE;
 }
 
-enum EllipseMode {
-    CENTER;
-    RADIUS;
-    CORNER;
-    CORNERS;
-}
-
 class Graphics {
 
     /**
-     * The type of shape the graphics is currently drawing.  If the graphics is
-     * not currently drawing anything, this should be null.  Possible values for
-     * this variable can be found in the above `ShapeType` enum.
+     * Width of the current Graphics
      */
-    public var currentShapeType:ShapeType;
-
-    /**
-     * Current shape depth for this graphics
-     */
-    public var shapeDepth:Int;
-
-    /**
-     * Current number of calls to the `vertex` method since the last
-     * `beginShape`
-     */
-    public var vertexDepth:Int;
-
-    /**
-     * List of verticies collected between calling `beingShape()` and calling
-     * `endShape()`.
-     */
-    var vertices:Array<Array<Float>>;
-
-    private var fillColor:Color;
-    private var strokeColor:Color;
-    private var strokeWidth:Float;
-
-    public var ellipseMode:EllipseMode;
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Temporary Methods
-    public function background(color:Color) {
-        trace("Graphics.background() should not be called.");
-        throw("Graphics.background() should not be called.");
-    }
-
-    public function point(x:Float, y:Float, ?z:Float) {
-        trace("Graphics.point() should not be called.");
-        throw("Graphics.point() should not be called.");
-    }
-
-    public function ellipse(x:Float, y:Float, width:Float, height:Float) {
-        if(ellipseMode == null) {
-            ellipseMode = CENTER;
-        }
-        
-        switch ellipseMode {
-            case CENTER:
-                drawEllipse(x-(width/2), y-(height/2), width, height);
-            case CORNER:
-                drawEllipse(x, y, width, height);
-            default:
-                trace("Unknown ellipseMode: "+ ellipseMode);
-                throw("Unknown ellipseMode: "+ ellipseMode);
-        }
-    }
-
-    public function drawEllipse(x:Float, y:Float, width:Float, height:Float) {
-        trace("drawEllipse not implemented");
-        throw("drawEllipse not implemented");
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Vertex Methods
+    public var width:Int;
     
     /**
-     * Allows the graphics to start accepting vertices for a given shape.  Code
-     * using this graphics library should be aware that before sending vertices
-     * to a `Graphics`, a `beginShape` call must be made.
-     *
-     * By default, the shapeType will be POLYGON.
-     *
-     * If `beginShape` is called while another shape is in progress, this method
-     * will throw an exception.
-     * 
-     * The following types of shapes are enabled by default (but, of couse,
-     * could be overridden in a child class).
-     *
-     * == POINTS ==
-     *  Will not draw connecting lines, or fill the contained area.  Will simply
-     *  draw single points at the passes vertices
-     * 
-     * == POLYGON ==
-     *  Default drawing style.  Given a set of points, it create a path through
-     *  the points.  If a fillColor is given, it will close the path (regardless
-     *  of `closeShape` being called with `CLOSE`), and fill the interior. 
-     * 
-     * == LINES ==
-     *  Will take pairs of `vertex` method calls, and draw desperate lines
-     *  between them.  Take the following code:
-     *
-     *      beginShape(LINES);
-     *      vertex(30, 20);
-     *      vertex(85, 20);
-     *      vertex(85, 75);
-     *      vertex(30, 75);
-     *      endShape();
-     *
-     * Will draw two lines.  One from {30,20} to {85, 20}, and another line
-     * between {85,75} and {30,75}, with nothing connecting the two.
-     * 
-     * == TRIANGLES ==
-     * == TRIANGLE_FAN ==
-     * == TRIANGLE_STRIP ==
-     * == QUADS ==
-     * == QUAD_STRIP ==
-     *
-     * @param shapeType:ShapeType   defines the type of shape to be drawn (via
-     *                              following vertex() method calls). Valid
-     *                              values are POINTS, POLYGON, LINES,
-     *                              TRIANGLES, TRIANGLE_FAN, TRIANGLE_STRIP,
-     *                              QUADS, and QUAD_STRIP.  See the above
-     *                              documentation for more information.
+     * Height of the current Graphics
      */
+    public var height:Int;
+    
+    /**
+     * "Path" of the current Graphics.  This is used for saving file (if the
+     * graphics enables it).
+     */
+    public var path:String;
+    
+    /**
+     * Current mode to draw a rectagle.
+     */
+    public var currentRectMode:ShapeMode;
+    public var currentEllipseMode:ShapeMode;
+    
+    /**
+     * Applent parent of this graphics
+     */
+    public var parent:Applet;
+    
+    public var looping:Bool;
+    
+    /**
+     * Type of the current shape being drawn
+     */
+    public var currentShapeType:ShapeType;
+    public var currentShapeClosingType:ShapeClosingType;
+    
+    public var vertices:Array<Vertex>;
+    
+    public var backgroundColor:Color;
+    public var fillColor:Color;
+    public var strokeColor:Color;
+    public var strokeWidth:Float;
+
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Abstract Methods
+    public function clear() {
+        trace("Abstract Method: Graphics.clear()");
+        throw("Abstract Method: Graphics.clear()");
+    }
+    
+    public function drawVertices() {
+        trace("Abstract Method: Graphics.drawVertices()");
+        throw("Abstract Method: Graphics.drawVertices()");
+    }
+    
+    public function frameRate(frameRate:Float) {
+        trace("Abstract Method: Graphics.frameRate()");
+        throw("Abstract Method: Graphics.frameRate()");
+    }
+    
+    public function loop() {
+        trace("Abstract Method: Graphics.loop()");
+        throw("Abstract Method: Graphics.loop()");
+    }
+    
+    public function noLoop() {
+        trace("Abstract Method: Graphics.noLoop()");
+        throw("Abstract Method: Graphics.noLoop()");
+    }
+    
+    public function redraw() {
+        trace("Abstract Method: Graphics.redraw()");
+        throw("Abstract Method: Graphics.redraw()");
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Vertex Methods
     public function beginShape(?shapeType:ShapeType) {
         if(shapeType == null) {
             shapeType = POLYGON;
         }
-
-        #if neko
-        if(shapeDepth == null) { shapeDepth = 0; }
-        #end
-        
-        shapeDepth++;
-        vertexDepth = 0;
-        
-        if(shapeDepth > 1) {
-            throw "Already drawing "+ currentShapeType +", cannot draw new "
-                + shapeType +".";
-        }
-
         this.currentShapeType = shapeType;
-        this.vertices = new Array<Array<Float>>();
+        this.vertices = new Array<Vertex>();
     }
-
-    /**
-     * This is the companion to `beginShape`, and may only be called after
-     * `beginShape`.  If a `beginShape` hasn't been called, this will throw an
-     * exception.
-     *
-     * @param shapeClosingType  Either null or a member of `ShapeClosingType`.
-     *                          If passed `CLOSE`, it will connect the last
-     *                          vertex of the draw with the first, and attempt
-     *                          to fill the internals.
-     */
+    
     public function endShape(?shapeClosingType:ShapeClosingType) {
         if(shapeClosingType == null) {
             shapeClosingType = OPEN;
         }
-
+        
+        this.currentShapeClosingType = shapeClosingType;
+        
         if(shapeClosingType == CLOSE && vertices.length > 1) {
-            var v:Array<Float> = vertices[0];
-            vertices.push(v);
+            vertices.push( vertices[0] );
         }
-
-        drawVertices(vertices, currentShapeType, shapeClosingType);
         
-        shapeDepth--;
-        vertexDepth = 0;
-        currentShapeType = null;
+        drawVertices();
+    }
+    
+    public function vertex(v:Vertex) {
+        vertices.push( v );
     }
 
-    public function vertex(x:Float, y:Float, ?z:Float) {
-        vertexDepth++;
-        
-        var point:Array<Float> = [x, y, z];
-        vertices.push(point);
-    }
 
     ////////////////////////////////////////////////////////////////////////////
-    // Shape Methods
-    public function triangle(x1:Float, y1:Float, x2:Float, y2:Float,
-        x3:Float, y3:Float) {
-
-        beginShape(POLYGON);
-        vertex(x1, y1);
-        vertex(x2, y2);
-        vertex(x3, y3);
-        endShape(CLOSE);
-    }
-
-    public function rect(x:Float, y:Float, width:Float, height:Float) {
-        beginShape(POLYGON);
-        vertex(x, y);
-        vertex(x+width, y);
-        vertex(x+width, y+height);
-        vertex(x, y+height);
-        endShape(CLOSE);
-    }
-
+    // Utility Methods
+    
     /**
-     * TODO: Only handles 2D lines
+     * Sets various defaults for a drawing graphics (should likely be called
+     * by an implementing Graphics to avoid null pointers.
      */
-    public function line(x1:Float, y1:Float, z1:Float,
-        x2:Float, ?y2:Float, ?z2:Float) {
-
-        beginShape(LINES);
-        vertex(x1, y1);
-        vertex(z1, x2);
+    public function defaults() {
+        currentRectMode = CORNER;
+        currentEllipseMode = CENTER;
+        backgroundColor = Color.resolve(200);
+        fillColor = Color.resolve(255);
+        strokeColor = Color.resolve(0);
+        looping = true;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Drawing Methods
+    
+    /**
+     * Clears the current drawing surface, and fills it solidly with the given
+     * color.
+     *
+     * @todo Might have to shuffle that rect
+     */
+    public function background(color:Color) {
+        backgroundColor = color;
+        
+        clear();
+        
+        var oldFill = fillColor;
+        var oldStroke = strokeColor;
+        
+        fill(backgroundColor);
+        stroke(Color.NONE);
+        
+        rectImpl(new Vertex(0, 0), new Vertex(width, height));
+        
+        fillColor = oldFill;
+        strokeColor = oldStroke;
+    }
+    
+    public function point(v:Vertex) {
+        beginShape(POINTS);
+        vertex(v);
         endShape();
     }
+    
+    public function line(from:Vertex, to:Vertex) {
+        beginShape(LINES);
+        vertex(from);
+        vertex(to);
+        endShape();
+    }
+    
+    /**
+     * Rectangle
+     */
+    public function rect(v1:Vertex, v2:Vertex) {
+        var hRadius:Float;
+        var vRadius:Float;
+        
+        switch (currentRectMode) {
+            case CORNERS:
+            
+            case CORNER:
+                v2.x += v1.x;
+                v2.y += v1.y;
+
+            case RADIUS:
+                hRadius = v2.x;
+                vRadius = v2.y;
+                
+                v2.x = v1.x + hRadius;
+                v2.y = v1.y + vRadius;
+                
+                v1.x -= hRadius;
+                v1.y -= vRadius;
+
+            case CENTER:
+                hRadius = v2.x / 2;
+                vRadius = v2.y / 2;
+                
+                v2.x = v1.x + hRadius;
+                v2.y = v1.y + vRadius;
+                
+                v1.x -= hRadius;
+                v1.y -= vRadius;
+        }
+
+        if (v1.x > v2.x) {
+            var temp:Float = v1.x;
+            v1.x = v2.x;
+            v2.x = temp;
+        }
+
+        if (v1.y > width) {
+            var temp:Float = v1.x;
+            v1.y = v2.y;
+            v2.y = temp;
+        }
+
+        rectImpl(v1, v2);
+    }
+    
+    /**
+     * Quadratic
+     */
+    public function quad(x1:Float, y1:Float, x2:Float, y2:Float,
+                         x3:Float, y3:Float, x4:Float, y4:Float) {
+        beginShape(QUADS);
+        vertex(new Vertex(x1, y1));
+        vertex(new Vertex(x2, y2));
+        vertex(new Vertex(x3, y3));
+        vertex(new Vertex(x4, y4));
+        endShape(CLOSE);
+    }
+    
+    /**
+     * TODO: Leave vertices
+     */
+    public function ellipse(v1:Vertex, v2:Vertex) {
+        var x:Float = v1.x;
+        var y:Float = v1.y;
+        var width:Float = v2.x;
+        var height:Float = v2.y;
+    
+        switch(currentEllipseMode) {
+            case CORNERS:
+                width -= x;
+                height -= y;
+                
+            case RADIUS:
+                x -= width;
+                y -= height;
+                width *= 2;
+                height *= 2;
+                
+            case CENTER:
+                x -= width/2;
+                y -= height/2;
+                
+            case CORNER:
+        }
+        
+        if(width < 0) {
+            x += width;
+            width = -width;
+        }
+        
+        if(height < 0) {
+            y += height;
+            height = -height;
+        }
+        
+        ellipseImpl(x, y, width, height);
+    }
+    
+    
 
     ////////////////////////////////////////////////////////////////////////////
     // Color Methods
-    public function stroke(color:Color) {
-        this.strokeColor = color;
-    }
-
     public function fill(color:Color) {
         this.fillColor = color;
     }
-
-    public function strokeWeight(strokeWidth:Float) {
-        this.strokeWidth = strokeWidth;
+    
+    public function stroke(color:Color) {
+        this.strokeColor = color;
     }
-
+    
     ////////////////////////////////////////////////////////////////////////////
-    // Matrix Methods
-    public function pushMatrix() {
-        if (matrixStackDepth+1 == MATRIX_STACK_DEPTH) {
-            trace("too many calls to pushMatrix()");
-            throw("too many calls to pushMatrix()");
+    // Private Methods
+    private function rectImpl(v1:Vertex, v2:Vertex) {
+        quad(
+            v1.x, v1.y,
+            v2.x, v1.y,
+            v2.x, v2.y,
+            v1.x, v2.y
+        );
+    }
+    
+    private function ellipseImpl(x:Float, y:Float, width:Float, height:Float) {
+        var TWO_PI:Float = Math.PI * 2;
+        var hRadius:Float = width / 2;
+        var vRadius:Float = height / 2;
+
+        var centerX:Float = x + hRadius;
+        var centerY:Float = y + vRadius;
+
+        var resolution:Float = 4 + Math.sqrt(hRadius + vRadius) * 3;
+        var thetaStep:Float = TWO_PI / resolution;
+                
+        var i:Float = 0;
+        beginShape();
+        while(i <= TWO_PI) {
+            vertex(new Vertex(centerX + Math.cos(i) * hRadius,
+                              centerY + Math.sin(i) * vRadius));
+            i += thetaStep;
         }
-        //float mat[] = matrixStack[matrixStackDepth];
-        var mat:Array<Float> = matrixStack[matrixStackDepth];
-        
-        // mat[0] = m00;
-        // mat[1] = m01; mat[2] = m02;
-        mat[0] =
-    mat[3] = m10; mat[4] = m11; mat[5] = m12;
-    matrixStackDepth++;
-  }
-
-
-  public function popMatrix() {
-    if (matrixStackDepth == 0) {
-      throw new RuntimeException("too many calls to popMatrix() " +
-                                 "(and not enough to pushMatrix)");
+        endShape(CLOSE);
     }
-    matrixStackDepth--;
-    float mat[] = matrixStack[matrixStackDepth];
-    m00 = mat[0]; m01 = mat[1]; m02 = mat[2];
-    m10 = mat[3]; m11 = mat[4]; m12 = mat[5];
-  }
 
-    ////////////////////////////////////////////////////////////////////////////
-    // Abstract Methods
-    public function drawVertices(verticies:Array<Array<Float>>,
-        openShapeType:ShapeType, closeShapeType:ShapeClosingType) {
-        trace("Unimplemented: Graphics.drawVertices");
-        throw "Unimplemented: Graphics.drawVerticies";
-    }
 }

@@ -1,6 +1,0 @@
--cp src
--cp test
--prompt
--neko build/proxe_tests.n
--main ProxeTests
--cmd neko build/proxe_tests.n
