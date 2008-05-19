@@ -9,9 +9,9 @@
  * and the coordinate in the lower right is [width-1, height-1].
  */
 
-import proxe.Sprite;
+import proxe.Applet;
 
-class Coordinates extends Sprite {
+class Coordinates extends Applet {
   
   public function setup() {
     // Sets the screen to be 200, 200, so the width of the window is 200 pixels
