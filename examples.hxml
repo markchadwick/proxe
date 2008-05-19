@@ -23,3 +23,57 @@
 -swf examples/structure/width_and_height/index.swf
 -swf-header 200:200:40:FFFFFF
 -main WidthAndHeight
+
+--next
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/structure/setup_and_draw/
+-swf examples/structure/setup_and_draw/index.swf
+-swf-header 200:200:40:FFFFFF
+-main SetupAndDraw
+
+--next
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/structure/no_loop/
+-swf examples/structure/no_loop/index.swf
+-swf-header 200:200:40:FFFFFF
+-main NoLoop
+
+--next
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/structure/redraw/
+-swf examples/structure/redraw/index.swf
+-swf-header 200:200:40:FFFFFF
+-main Redraw
+
+--next
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/structure/functions/
+-swf examples/structure/functions/index.swf
+-swf-header 200:200:40:FFFFFF
+-main Functions
+
+--next
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/structure/recursion/
+-swf examples/structure/recursion/index.swf
+-swf-header 200:200:40:FFFFFF
+-main Recursion
+
+--next
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/structure/recursion2/
+-swf examples/structure/recursion2/index.swf
+-swf-header 200:200:40:FFFFFF
+-main Recursion

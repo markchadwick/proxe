@@ -37,20 +37,28 @@ class Applet {
     public var graphics:Graphics;
     
     
+    public var mouseX:Float;
+    public var mouseY:Float;
+    
     /**
      * Default Constructor
      */
     public function new() {
-        trace("Applet initialized.");
     }
     
     public function init() {
         setup();
-        draw();
+        
+        if(graphics.looping) {
+            loop();
+        } else {
+            draw();
+        }
     }
     
     public function setup() { }
     public function draw() { }
+    public function mousePressed() { }
     
     ////////////////////////////////////////////////////////////////////////////
     // Setup Methods
@@ -68,7 +76,23 @@ class Applet {
                                                     path, this);
         this.path = graphics.path;
     }
+
+    public function loop() {
+        graphics.loop();
+    }
     
+    public function noLoop() {
+        graphics.noLoop();
+    }
+    
+    public function frameRate(frameRate:Float) {
+        graphics.frameRate(frameRate);
+    }
+    
+    public function redraw() {
+        graphics.redraw();
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     // Color Methods
     public function fill(red:Int, ?green:Int, ?blue:Int, ?alpha:Int) {
@@ -86,31 +110,13 @@ class Applet {
     }
     
     public function noStroke() {
-        graphics.fill(Color.NONE);
+        graphics.stroke(Color.NONE);
     }
     
     public function point(x:Float, y:Float, ?z:Float) {
         graphics.point(new Vertex(x, y, z));
     }
     
-    /**
-     * Passes either a 2D or 3D line to the graphics renderer, based on the
-     * number of passed parameters.  For example:
-     *  
-     *  // Draws a 2D line from {x:0, y:0} to {x:10, y:10}
-     *  line(0, 0, 10, 10);
-     * 
-     *  // Draws a 3D line from {x:0, y:0, z:0} to {x:100, y:200, z:300}
-     *  line(0, 0, 0, 100, 200, 300);
-     */
-    public function line(x1:Float, y1:Float, z1:Float, x2:Float, ?y2:Float, ?z2:Float) {
-        if(y2 == null) {
-            graphics.line(new Vertex(x1, y1), new Vertex(z1, x2));
-        } else {
-            graphics.line(new Vertex(x1, y1, z1),
-                          new Vertex(x2, y2, z2));
-        }
-    }
     
     ////////////////////////////////////////////////////////////////////////////
     // Drawing Methods
@@ -123,6 +129,43 @@ class Applet {
     public function rect(x1:Float, y1:Float, x2:Float, y2:Float) {
         graphics.rect(new Vertex(x1, y1),
                       new Vertex(x2, y2));
+    }
+    
+    public function line(x1:Float, y1:Float, z1:Float, x2:Float, ?y2:Float, ?z2:Float) {
+        if(y2 == null) {
+            graphics.line(new Vertex(x1, y1), new Vertex(z1, x2));
+        } else {
+            graphics.line(new Vertex(x1, y1, z1),
+                          new Vertex(x2, y2, z2));
+        }
+    }
+    
+    public function ellipse(x1:Float, y1:Float, x2:Float, y2:Float) {
+        graphics.ellipse(new Vertex(x1, y1),
+                         new Vertex(x2, y2));
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Utility Methods
+    public function random(?low:Float, ?high:Float) : Float {
+        if(low == null) {
+            return Math.random();
+        }
+        
+        if(high == null) {
+            return Math.random() * low;
+        }
+        
+        var diff:Float = high - low;
+        return (Math.random() * diff) + low;
+    }
+    
+    public function cos(x:Float) : Float {
+        return Math.cos(x);
+    }
+    
+    public function sin(x:Float) : Float {
+        return Math.sin(x);
     }
     
 }

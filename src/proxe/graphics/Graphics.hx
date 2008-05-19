@@ -4,7 +4,7 @@ import proxe.Applet;
 import proxe.Color;
 import proxe.Vertex;
 
-enum RectMode {
+enum ShapeMode {
     CORNERS;
     CORNER;
     RADIUS;
@@ -48,13 +48,15 @@ class Graphics {
     /**
      * Current mode to draw a rectagle.
      */
-    public var currentRectMode:RectMode;
+    public var currentRectMode:ShapeMode;
+    public var currentEllipseMode:ShapeMode;
     
     /**
      * Applent parent of this graphics
      */
     public var parent:Applet;
     
+    public var looping:Bool;
     
     /**
      * Type of the current shape being drawn
@@ -68,6 +70,7 @@ class Graphics {
     public var fillColor:Color;
     public var strokeColor:Color;
     public var strokeWidth:Float;
+
     
     ////////////////////////////////////////////////////////////////////////////
     // Abstract Methods
@@ -81,6 +84,25 @@ class Graphics {
         throw("Abstract Method: Graphics.drawVertices()");
     }
     
+    public function frameRate(frameRate:Float) {
+        trace("Abstract Method: Graphics.frameRate()");
+        throw("Abstract Method: Graphics.frameRate()");
+    }
+    
+    public function loop() {
+        trace("Abstract Method: Graphics.loop()");
+        throw("Abstract Method: Graphics.loop()");
+    }
+    
+    public function noLoop() {
+        trace("Abstract Method: Graphics.noLoop()");
+        throw("Abstract Method: Graphics.noLoop()");
+    }
+    
+    public function redraw() {
+        trace("Abstract Method: Graphics.redraw()");
+        throw("Abstract Method: Graphics.redraw()");
+    }
     
     ////////////////////////////////////////////////////////////////////////////
     // Vertex Methods
@@ -120,9 +142,11 @@ class Graphics {
      */
     public function defaults() {
         currentRectMode = CORNER;
+        currentEllipseMode = CENTER;
         backgroundColor = Color.resolve(200);
         fillColor = Color.resolve(255);
         strokeColor = Color.resolve(0);
+        looping = true;
     }
     
     ////////////////////////////////////////////////////////////////////////////
@@ -146,6 +170,9 @@ class Graphics {
         stroke(Color.NONE);
         
         rectImpl(new Vertex(0, 0), new Vertex(width, height));
+        
+        fillColor = oldFill;
+        strokeColor = oldStroke;
     }
     
     public function point(v:Vertex) {
@@ -222,7 +249,49 @@ class Graphics {
         vertex(new Vertex(x3, y3));
         vertex(new Vertex(x4, y4));
         endShape(CLOSE);
-  }
+    }
+    
+    /**
+     * TODO: Leave vertices
+     */
+    public function ellipse(v1:Vertex, v2:Vertex) {
+        var x:Float = v1.x;
+        var y:Float = v1.y;
+        var width:Float = v2.x;
+        var height:Float = v2.y;
+    
+        switch(currentEllipseMode) {
+            case CORNERS:
+                width -= x;
+                height -= y;
+                
+            case RADIUS:
+                x -= width;
+                y -= height;
+                width *= 2;
+                height *= 2;
+                
+            case CENTER:
+                x -= width/2;
+                y -= height/2;
+                
+            case CORNER:
+        }
+        
+        if(width < 0) {
+            x += width;
+            width = -width;
+        }
+        
+        if(height < 0) {
+            y += height;
+            height = -height;
+        }
+        
+        ellipseImpl(x, y, width, height);
+    }
+    
+    
 
     ////////////////////////////////////////////////////////////////////////////
     // Color Methods
@@ -243,6 +312,27 @@ class Graphics {
             v2.x, v2.y,
             v1.x, v2.y
         );
+    }
+    
+    private function ellipseImpl(x:Float, y:Float, width:Float, height:Float) {
+        var TWO_PI:Float = Math.PI * 2;
+        var hRadius:Float = width / 2;
+        var vRadius:Float = height / 2;
+
+        var centerX:Float = x + hRadius;
+        var centerY:Float = y + vRadius;
+
+        var resolution:Float = 4 + Math.sqrt(hRadius + vRadius) * 3;
+        var thetaStep:Float = TWO_PI / resolution;
+                
+        var i:Float = 0;
+        beginShape();
+        while(i <= TWO_PI) {
+            vertex(new Vertex(centerX + Math.cos(i) * hRadius,
+                              centerY + Math.sin(i) * vRadius));
+            i += thetaStep;
+        }
+        endShape(CLOSE);
     }
 
 }

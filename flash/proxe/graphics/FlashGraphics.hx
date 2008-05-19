@@ -1,6 +1,9 @@
 package proxe.graphics;
 
 import flash.Lib;
+import flash.events.KeyboardEvent;
+import flash.events.MouseEvent;
+import flash.events.Event;
 import flash.display.MovieClip;
 
 import proxe.Applet;
@@ -21,16 +24,104 @@ class FlashGraphics extends Graphics {
         createMovie(width, height);
         
         defaults();
+        bindEvents();
     }
 
-    /**
-     * Clears the current drawing surface
-     */
+    ////////////////////////////////////////////////////////////////////////////
+    // Control Methods
+
     public function clear() {
         graphics.clear();
     }
+    
+    public function redraw() {
+        if(!looping) {
+            clear();
+            parent.draw();
+        }
+    }
+
+    public function frameRate(frameRate:Float) {
+
+    }
+    
+    public function loop() {
+        looping = true;
+        Lib.current.addEventListener(Event.ENTER_FRAME,loopEvent);
+    }
+    
+    public function noLoop() {
+        looping = false;
+        Lib.current.removeEventListener(Event.ENTER_FRAME,loopEvent);
+    }
+
+	private function loopEvent(e:Event) {
+		parent.draw();
+	}
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Drawing Methods
 
     public function drawVertices() {
+        var me = this;
+        fillAndStroke(function() {
+        
+            var vertsDrawn:Int = 0;
+            for(vertex in me.vertices) {
+                if(vertsDrawn == 0) {
+                    me.graphics.moveTo(vertex.x, vertex.y);
+                } else {
+                    me.graphics.lineTo(vertex.x, vertex.y);
+                }
+                vertsDrawn++;
+            }
+        });
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Event Binding
+
+    private function bindEvents() {
+        Lib.current.stage.addEventListener(MouseEvent.MOUSE_MOVE,
+            mouseMovedEvent);
+            
+		Lib.current.stage.addEventListener(MouseEvent.MOUSE_DOWN,
+            mousePressedEvent);
+            
+		Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP,
+            mouseReleasedEvent);
+            
+		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN,
+            keyTypedEvent); 
+            
+		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP,
+            keyReleasedEvent); 
+    }
+    
+    private function mouseMovedEvent(e:Event) {
+//        trace("Moved Mouse");
+    }
+    
+    private function mousePressedEvent(e:Event) {
+        parent.mousePressed();
+    }
+    
+    private function mouseReleasedEvent(e:Event) {
+//        trace("Released Mouse");
+    }
+    
+    private function keyTypedEvent(e:Event) {
+//        trace("Typed Key");
+    }
+    
+    private function keyReleasedEvent(e:Event) {
+//        trace("Released Key");
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Private Methods
+    
+    private function fillAndStroke(func:Void -> Void) {
         if(currentShapeClosingType == CLOSE && !fillColor.equals(Color.NONE)) {
             graphics.beginFill(rgb(fillColor), alpha(fillColor));
         }
@@ -41,22 +132,10 @@ class FlashGraphics extends Graphics {
             graphics.lineStyle();
         }
         
-        var vertsDrawn:Int = 0;
-        
-        for(vertex in vertices) {
-            if(vertsDrawn == 0) {
-                graphics.moveTo(vertex.x, vertex.y);
-            } else {
-                graphics.lineTo(vertex.x, vertex.y);
-            }
-            vertsDrawn++;
-        }
+        func();
         
         graphics.endFill();
     }
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Private Methods
     
     private function createMovie(width:Int, height:Int, ?parent:MovieClip) {
         if(parent == null) {
