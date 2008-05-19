@@ -14,6 +14,7 @@ import proxe.Applet;
 class Coordinates extends Applet {
   
   public function setup() {
+    trace("setup()");
     // Sets the screen to be 200, 200, so the width of the window is 200 pixels
     // and the height of the window is 200 pixels
     size(200, 200);
@@ -49,6 +50,7 @@ class Coordinates extends Applet {
   }
 
   public static function main() {
-    new Coordinates().setup();
+    trace("Main");
+    new Coordinates().init();
   }
 }

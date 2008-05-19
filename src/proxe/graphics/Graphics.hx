@@ -2,6 +2,7 @@ package proxe.graphics;
 
 import proxe.Applet;
 import proxe.Color;
+import proxe.Vertex;
 
 enum RectMode {
     CORNERS;
@@ -54,9 +55,19 @@ class Graphics {
      */
     public var parent:Applet;
     
+    
+    /**
+     * Type of the current shape being drawn
+     */
+    public var currentShapeType:ShapeType;
+    public var currentShapeClosingType:ShapeClosingType;
+    
+    public var vertices:Array<Vertex>;
+    
     public var backgroundColor:Color;
     public var fillColor:Color;
     public var strokeColor:Color;
+    public var strokeWidth:Float;
     
     ////////////////////////////////////////////////////////////////////////////
     // Abstract Methods
@@ -65,21 +76,40 @@ class Graphics {
         throw("Abstract Method: Graphics.clear()");
     }
     
+    public function drawVertices() {
+        trace("Abstract Method: Graphics.drawVertices()");
+        throw("Abstract Method: Graphics.drawVertices()");
+    }
     
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Vertex Methods
     public function beginShape(?shapeType:ShapeType) {
-        trace("Abstract Method: Graphics.beginShape()");
-        throw("Abstract Method: Graphics.beginShape()");
+        if(shapeType == null) {
+            shapeType = POLYGON;
+        }
+        this.currentShapeType = shapeType;
+        this.vertices = new Array<Vertex>();
     }
     
     public function endShape(?shapeClosingType:ShapeClosingType) {
-        trace("Abstract Method: Graphics.endShape()");
-        trace("Abstract Method: Graphics.endShape()");
+        if(shapeClosingType == null) {
+            shapeClosingType = OPEN;
+        }
+        
+        this.currentShapeClosingType = shapeClosingType;
+        
+        if(shapeClosingType == CLOSE && vertices.length > 1) {
+            vertices.push( vertices[0] );
+        }
+        
+        drawVertices();
     }
     
-    public function vertex(x:Float, y:Float, ?z:Float, ?u:Float, ?v:Float) {
-        trace("Abstract Method: Graphics.vertex()");
-        throw("Abstract Method: Graphics.vertex()");
+    public function vertex(v:Vertex) {
+        vertices.push( v );
     }
+
 
     ////////////////////////////////////////////////////////////////////////////
     // Utility Methods
@@ -89,7 +119,7 @@ class Graphics {
      * by an implementing Graphics to avoid null pointers.
      */
     public function defaults() {
-        currentRectMode = CENTER;
+        currentRectMode = CORNER;
         backgroundColor = Color.resolve(200);
         fillColor = Color.resolve(255);
         strokeColor = Color.resolve(0);
@@ -112,16 +142,29 @@ class Graphics {
         var oldFill = fillColor;
         var oldStroke = strokeColor;
         
-        fillColor = backgroundColor;
-        strokeColor = Color.NONE;
+        fill(backgroundColor);
+        stroke(Color.NONE);
         
-        rect(0, 0, width, height);
+        rectImpl(new Vertex(0, 0), new Vertex(width, height));
+    }
+    
+    public function point(v:Vertex) {
+        beginShape(POINTS);
+        vertex(v);
+        endShape();
+    }
+    
+    public function line(from:Vertex, to:Vertex) {
+        beginShape(LINES);
+        vertex(from);
+        vertex(to);
+        endShape();
     }
     
     /**
      * Rectangle
      */
-    public function rect(x1:Float, y1:Float, x2:Float, y2:Float) {
+    public function rect(v1:Vertex, v2:Vertex) {
         var hRadius:Float;
         var vRadius:Float;
         
@@ -129,44 +172,43 @@ class Graphics {
             case CORNERS:
             
             case CORNER:
-                x2 += x1;
-                y2 += y1;
+                v2.x += v1.x;
+                v2.y += v1.y;
 
             case RADIUS:
-                hRadius = x2;
-                vRadius = y2;
+                hRadius = v2.x;
+                vRadius = v2.y;
                 
-                x2 = x1 + hRadius;
-                y2 = y1 + vRadius;
+                v2.x = v1.x + hRadius;
+                v2.y = v1.y + vRadius;
                 
-                x1 -= hRadius;
-                y1 -= vRadius;
+                v1.x -= hRadius;
+                v1.y -= vRadius;
 
             case CENTER:
-                hRadius = x2 / 2;
-                vRadius = y2 / 2;
+                hRadius = v2.x / 2;
+                vRadius = v2.y / 2;
                 
-                x2 = x1 + hRadius;
-                y2 = y1 + vRadius;
+                v2.x = v1.x + hRadius;
+                v2.y = v1.y + vRadius;
                 
-                x1 -= hRadius;
-                y1 -= vRadius;
+                v1.x -= hRadius;
+                v1.y -= vRadius;
         }
 
-        if (x1 > x2) {
-            var temp:Float = x1;
-            x1 = x2;
-            x2 = temp;
+        if (v1.x > v2.x) {
+            var temp:Float = v1.x;
+            v1.x = v2.x;
+            v2.x = temp;
         }
 
-        if (y1 > y2) {
-            var temp:Float = y1;
-            y1 = y2;
-            y2 = temp;
+        if (v1.y > width) {
+            var temp:Float = v1.x;
+            v1.y = v2.y;
+            v2.y = temp;
         }
 
-        trace("Drawing Rect");
-        rectImpl(x1, y1, x2, y2);
+        rectImpl(v1, v2);
     }
     
     /**
@@ -174,26 +216,33 @@ class Graphics {
      */
     public function quad(x1:Float, y1:Float, x2:Float, y2:Float,
                          x3:Float, y3:Float, x4:Float, y4:Float) {
-        
-        trace("Begin Shape");
         beginShape(QUADS);
-        
-        trace("Vertex 1");
-        vertex(x1, y1);
-        
-        trace("Vertex 2");
-        vertex(x2, y2);
-        vertex(x3, y3);
-        vertex(x4, y4);
-        
-        trace("End shape");
-        endShape();
+        vertex(new Vertex(x1, y1));
+        vertex(new Vertex(x2, y2));
+        vertex(new Vertex(x3, y3));
+        vertex(new Vertex(x4, y4));
+        endShape(CLOSE);
   }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Color Methods
+    public function fill(color:Color) {
+        this.fillColor = color;
+    }
+    
+    public function stroke(color:Color) {
+        this.strokeColor = color;
+    }
     
     ////////////////////////////////////////////////////////////////////////////
     // Private Methods
-    private function rectImpl(x1:Float, y1:Float, x2:Float, y2:Float) {
-        quad(x1, y1,  x2, y1,  x2, y2,  x1, y2);
+    private function rectImpl(v1:Vertex, v2:Vertex) {
+        quad(
+            v1.x, v1.y,
+            v2.x, v1.y,
+            v2.x, v2.y,
+            v1.x, v2.y
+        );
     }
 
 }

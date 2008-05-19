@@ -44,6 +44,14 @@ class Applet {
         trace("Applet initialized.");
     }
     
+    public function init() {
+        setup();
+        draw();
+    }
+    
+    public function setup() { }
+    public function draw() { }
+    
     ////////////////////////////////////////////////////////////////////////////
     // Setup Methods
     
@@ -62,10 +70,59 @@ class Applet {
     }
     
     ////////////////////////////////////////////////////////////////////////////
+    // Color Methods
+    public function fill(red:Int, ?green:Int, ?blue:Int, ?alpha:Int) {
+        var color:Color = Color.resolve(red, green, blue, alpha);
+        graphics.fill(color);
+    }
+    
+    public function noFill() {
+        graphics.fill(Color.NONE);
+    }
+    
+    public function stroke(red:Int, ?green:Int, ?blue:Int, ?alpha:Int) {
+        var color:Color = Color.resolve(red, green, blue, alpha);
+        graphics.stroke(color);
+    }
+    
+    public function noStroke() {
+        graphics.fill(Color.NONE);
+    }
+    
+    public function point(x:Float, y:Float, ?z:Float) {
+        graphics.point(new Vertex(x, y, z));
+    }
+    
+    /**
+     * Passes either a 2D or 3D line to the graphics renderer, based on the
+     * number of passed parameters.  For example:
+     *  
+     *  // Draws a 2D line from {x:0, y:0} to {x:10, y:10}
+     *  line(0, 0, 10, 10);
+     * 
+     *  // Draws a 3D line from {x:0, y:0, z:0} to {x:100, y:200, z:300}
+     *  line(0, 0, 0, 100, 200, 300);
+     */
+    public function line(x1:Float, y1:Float, z1:Float, x2:Float, ?y2:Float, ?z2:Float) {
+        if(y2 == null) {
+            graphics.line(new Vertex(x1, y1), new Vertex(z1, x2));
+        } else {
+            graphics.line(new Vertex(x1, y1, z1),
+                          new Vertex(x2, y2, z2));
+        }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
     // Drawing Methods
     
     public function background(red:Int, ?green:Int, ?blue:Int, ?alpha:Int) {
         var color:Color = Color.resolve(red, green, blue, alpha);
         graphics.background(color);
     }
+    
+    public function rect(x1:Float, y1:Float, x2:Float, y2:Float) {
+        graphics.rect(new Vertex(x1, y1),
+                      new Vertex(x2, y2));
+    }
+    
 }

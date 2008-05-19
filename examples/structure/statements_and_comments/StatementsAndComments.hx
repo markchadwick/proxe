@@ -29,6 +29,6 @@ class StatementsAndComments extends Applet {
   }
 
   public static function main() {
-    new StatementsAndComments().setup();
+    new StatementsAndComments().init();
   }
 }
