@@ -98,8 +98,12 @@ class FlashGraphics extends Graphics {
             keyReleasedEvent); 
     }
     
-    private function mouseMovedEvent(e:Event) {
-//        trace("Moved Mouse");
+    /**
+     * TODO: localX is local to the sprite -- think about it?
+     */
+    private function mouseMovedEvent(e:MouseEvent) {
+        parent.mouseX = e.stageX;
+        parent.mouseY = e.stageY;
     }
     
     private function mousePressedEvent(e:Event) {

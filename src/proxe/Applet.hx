@@ -44,6 +44,8 @@ class Applet {
      * Default Constructor
      */
     public function new() {
+        mouseX = 0;
+        mouseY = 0;
     }
     
     public function init() {
@@ -147,6 +149,10 @@ class Applet {
     
     ////////////////////////////////////////////////////////////////////////////
     // Utility Methods
+    /**
+     * @todo inline/static
+     */
+     
     public function random(?low:Float, ?high:Float) : Float {
         if(low == null) {
             return Math.random();
@@ -166,6 +172,10 @@ class Applet {
     
     public function sin(x:Float) : Float {
         return Math.sin(x);
+    }
+    
+    public inline function abs(x:Float) : Float {
+        return Math.abs(x);
     }
     
 }

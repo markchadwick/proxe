@@ -77,3 +77,12 @@
 -swf examples/structure/recursion2/index.swf
 -swf-header 200:200:40:FFFFFF
 -main Recursion
+
+--next
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/structure/objects/
+-swf examples/structure/objects/index.swf
+-swf-header 200:200:40:FFFFFF
+-main Objects
