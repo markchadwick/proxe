@@ -63,19 +63,40 @@ class FlashGraphics extends Graphics {
     // Drawing Methods
 
     public function drawVertices() {
-        var me = this;
-        fillAndStroke(function() {
-        
-            var vertsDrawn:Int = 0;
-            for(vertex in me.vertices) {
-                if(vertsDrawn == 0) {
-                    me.graphics.moveTo(vertex.x, vertex.y);
-                } else {
-                    me.graphics.lineTo(vertex.x, vertex.y);
+        if(currentShapeType == POINTS) {
+            drawPoints();
+        } else {
+            var me = this;
+            fillAndStroke(function() {
+                var vertsDrawn:Int = 0;
+                for(vertex in me.vertices) {
+                    if(vertsDrawn == 0) {
+                        me.graphics.moveTo(vertex.x, vertex.y);
+                    } else {
+                        me.graphics.lineTo(vertex.x, vertex.y);
+                    }
+                    vertsDrawn++;
                 }
-                vertsDrawn++;
-            }
-        });
+            });
+        }
+    }
+    
+    /**
+     * TODO: Quite inefficent
+     */
+    public function drawPoints() {
+        var oldFill = fillColor;
+        var oldStroke = strokeColor;
+        
+        fillColor = strokeColor;
+        strokeColor = Color.NONE;
+        
+        for(vertex in vertices) {
+            rect(new Vertex(vertex.x, vertex.y), new Vertex(1, 1));
+        }
+        
+        fillColor = oldFill;
+        strokeColor = oldStroke;
     }
     
     ////////////////////////////////////////////////////////////////////////////

@@ -4,29 +4,6 @@ import proxe.Applet;
 import proxe.Color;
 import proxe.Vertex;
 
-enum ShapeMode {
-    CORNERS;
-    CORNER;
-    RADIUS;
-    CENTER;
-}
-
-enum ShapeType {
-    POINTS;
-    POLYGON;
-    LINES;
-    TRIANGLES;
-    TRIANGLE_FAN;
-    TRIANGLE_STRIP;
-    QUADS;
-    QUAD_STRIP;
-}
-
-enum ShapeClosingType {
-    OPEN;
-    CLOSE;
-}
-
 class Graphics {
 
     /**
@@ -74,6 +51,7 @@ class Graphics {
     
     ////////////////////////////////////////////////////////////////////////////
     // Abstract Methods
+    
     public function clear() {
         trace("Abstract Method: Graphics.clear()");
         throw("Abstract Method: Graphics.clear()");
@@ -106,19 +84,13 @@ class Graphics {
     
     ////////////////////////////////////////////////////////////////////////////
     // Vertex Methods
-    public function beginShape(?shapeType:ShapeType) {
-        if(shapeType == null) {
-            shapeType = POLYGON;
-        }
+    
+    public function beginShape(shapeType:ShapeType) {
         this.currentShapeType = shapeType;
         this.vertices = new Array<Vertex>();
     }
     
-    public function endShape(?shapeClosingType:ShapeClosingType) {
-        if(shapeClosingType == null) {
-            shapeClosingType = OPEN;
-        }
-        
+    public function endShape(shapeClosingType:ShapeClosingType) {
         this.currentShapeClosingType = shapeClosingType;
         
         if(shapeClosingType == CLOSE && vertices.length > 1) {
@@ -129,9 +101,36 @@ class Graphics {
     }
     
     public function vertex(v:Vertex) {
-        vertices.push( v );
+        switch(currentShapeType) {
+            case POINTS:
+                vertices.push(v);
+                
+            case POLYGON:
+                vertices.push(v);
+                
+            case LINES:
+                vertices.push(v);
+                
+            case TRIANGLES:
+                vertices.push(v);
+                
+            case TRIANGLE_FAN:
+                vertices.push(v);
+                
+            case TRIANGLE_STRIP:
+                vertices.push(v);
+                
+            case QUADS:
+                vertices.push(v);
+                
+            case QUAD_STRIP:
+                vertices.push(v);
+        }
     }
 
+    public function curveVertex(v:Vertex) {
+        splineVertex(v, false);
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     // Utility Methods
@@ -178,14 +177,14 @@ class Graphics {
     public function point(v:Vertex) {
         beginShape(POINTS);
         vertex(v);
-        endShape();
+        endShape(OPEN);
     }
     
     public function line(from:Vertex, to:Vertex) {
         beginShape(LINES);
         vertex(from);
         vertex(to);
-        endShape();
+        endShape(OPEN);
     }
     
     /**
@@ -238,11 +237,11 @@ class Graphics {
         rectImpl(v1, v2);
     }
     
-    /**
-     * Quadratic
-     */
-    public function quad(x1:Float, y1:Float, x2:Float, y2:Float,
-                         x3:Float, y3:Float, x4:Float, y4:Float) {
+
+    public function quad(x1:Float, y1:Float,
+                         x2:Float, y2:Float,
+                         x3:Float, y3:Float,
+                         x4:Float, y4:Float) {
         beginShape(QUADS);
         vertex(new Vertex(x1, y1));
         vertex(new Vertex(x2, y2));
@@ -251,9 +250,15 @@ class Graphics {
         endShape(CLOSE);
     }
     
-    /**
-     * TODO: Leave vertices
-     */
+
+    public function triangle(v1:Vertex, v2:Vertex, v3:Vertex) {
+        beginShape(TRIANGLES);
+        vertex(v1);
+        vertex(v2);
+        vertex(v3);
+        endShape(CLOSE);
+    }
+
     public function ellipse(v1:Vertex, v2:Vertex) {
         var x:Float = v1.x;
         var y:Float = v1.y;
@@ -295,6 +300,7 @@ class Graphics {
 
     ////////////////////////////////////////////////////////////////////////////
     // Color Methods
+    
     public function fill(color:Color) {
         this.fillColor = color;
     }
@@ -302,6 +308,14 @@ class Graphics {
     public function stroke(color:Color) {
         this.strokeColor = color;
     }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Drawing Methods
+    
+    public function rectMode(mode:ShapeMode) {
+        this.currentRectMode = mode;
+    }
+    
     
     ////////////////////////////////////////////////////////////////////////////
     // Private Methods
@@ -326,13 +340,18 @@ class Graphics {
         var thetaStep:Float = TWO_PI / resolution;
                 
         var i:Float = 0;
-        beginShape();
+        
+        beginShape(POLYGON);
         while(i <= TWO_PI) {
             vertex(new Vertex(centerX + Math.cos(i) * hRadius,
                               centerY + Math.sin(i) * vRadius));
             i += thetaStep;
         }
         endShape(CLOSE);
+    }
+    
+    private function splineVertex(v:Vertex, bezier:Bool) {
+        vertex(v);
     }
 
 }

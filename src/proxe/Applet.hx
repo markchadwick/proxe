@@ -4,6 +4,29 @@ import proxe.Color;
 import proxe.graphics.Graphics;
 import proxe.graphics.GraphicsFactory;
 
+enum ShapeMode {
+    CORNERS;
+    CORNER;
+    RADIUS;
+    CENTER;
+}
+
+enum ShapeType {
+    POINTS;
+    POLYGON;
+    LINES;
+    TRIANGLES;
+    TRIANGLE_FAN;
+    TRIANGLE_STRIP;
+    QUADS;
+    QUAD_STRIP;
+}
+
+enum ShapeClosingType {
+    OPEN;
+    CLOSE;
+}
+
 class Applet {
     
     ////////////////////////////////////////////////////////////////////////////
@@ -145,6 +168,54 @@ class Applet {
     public function ellipse(x1:Float, y1:Float, x2:Float, y2:Float) {
         graphics.ellipse(new Vertex(x1, y1),
                          new Vertex(x2, y2));
+    }
+    
+    public function quad(x1:Float, y1:Float,
+                         x2:Float, y2:Float,
+                         x3:Float, y3:Float,
+                         x4:Float, y4:Float) {
+        graphics.quad(x1, y1, x2, y2, x3, y3, x4, y4);
+    }
+    
+    public function triangle(x1:Float, y1:Float,
+                             x2:Float, y2:Float,
+                             x3:Float, y3:Float) {
+                             
+        graphics.triangle(new Vertex(x1, y1),
+                          new Vertex(x2, y2),
+                          new Vertex(x3, y3));
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // Vertex Methods
+    
+    public function beginShape(?shapeType:ShapeType) {
+        if(shapeType == null) {
+            shapeType = POLYGON;
+        }
+        graphics.beginShape(shapeType);
+    }
+    
+    public function endShape(?shapeClosingType:ShapeClosingType) {
+        if(shapeClosingType == null) {
+            shapeClosingType = OPEN;
+        }
+        graphics.endShape(shapeClosingType);
+    }
+    
+    public function vertex(x:Float, y:Float, ?z:Float, ?u:Float, ?v:Float) {
+        graphics.vertex(new Vertex(x, y, z, u, v));
+    }
+    
+    public function curveVertex(x:Float, y:Float, ?z:Float) {
+        graphics.curveVertex(new Vertex(x, y, z));
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Drawing Methods
+    
+    public function rectMode(mode:ShapeMode) {
+        graphics.rectMode(mode);
     }
     
     ////////////////////////////////////////////////////////////////////////////

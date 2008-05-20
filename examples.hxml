@@ -1,3 +1,7 @@
+#
+# Structure Examples
+#
+
 -cp src
 -cp flash
 -swf-version 9
@@ -86,3 +90,72 @@
 -swf examples/structure/objects/index.swf
 -swf-header 200:200:40:FFFFFF
 -main Objects
+
+#
+# Form Examples
+#
+--next
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/form/points_and_lines/
+-swf examples/form/points_and_lines/index.swf
+-swf-header 200:200:40:FFFFFF
+-main PointsAndLines
+
+--next
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/form/shape_primitives/
+-swf examples/form/shape_primitives/index.swf
+-swf-header 200:200:40:FFFFFF
+-main ShapePrimitives
+
+--next
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/form/vertices/
+-swf examples/form/vertices/index.swf
+-swf-header 200:200:40:FFFFFF
+-main Vertices
+
+--next
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/form/simple_curves/
+-swf examples/form/simple_curves/index.swf
+-swf-header 200:200:40:FFFFFF
+-main SimpleCurves
+
+#--next
+#-cp src
+#-cp flash
+#-swf-version 9
+#-cp examples/form/bezier/
+#-swf examples/form/bezier/index.swf
+#-swf-header 200:200:40:FFFFFF
+#-main Bezier
+
+#
+# Input Examples
+#
+#--next
+#-cp src
+#-cp flash
+#-swf-version 9
+#-cp examples/input/mouse1d/
+#-swf examples/input/mouse1d/index.swf
+#-swf-header 200:200:40:FFFFFF
+#-main Mouse1D
+
+--next
+-cp src
+-cp flash
+-swf-version 9
+-cp examples/input/mouse2d/
+-swf examples/input/mouse2d/index.swf
+-swf-header 200:200:40:FFFFFF
+-main Mouse2D
