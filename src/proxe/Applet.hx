@@ -35,14 +35,14 @@ class Applet {
     /**
      * Width the current applet
      *
-     * @todo implement getter (no setter)
+     * TODO: implement getter (no setter)
      */
     public var width:Int;
 
     /**
      * Height of the current applet
      *
-     * @todo implement getter (no setter)
+     * TODO: implement getter (no setter)
      */
     public var height:Int;
     
@@ -55,21 +55,42 @@ class Applet {
     /**
      * Current Graphics renderer.
      *
-     * @todo implement "g" getter for Processing compatability
+     * TODO: implement "g" getter for Processing compatability
      */
     public var graphics:Graphics;
     
-    
+    /**
+     * Current horizontal position of the mouse cursor, relative to the Applet.
+     * It uses the same coordinate system as the Applet, so 0 would be the
+     * left-hand side of the screen, and equal to "width" would be the right.
+     */
     public var mouseX:Float;
     public var mouseY:Float;
     
+    ////////////////////////////////////////////////////////////////////////////
+    // Constructor
+    
     /**
-     * Default Constructor
+     * Default Constructor.  Will set set certain field values which we cannot
+     * guarentee will be set by the first time a user queries them.  Mouse
+     * position, for example, may be updated whenever a particular platform
+     * implementation would like to set them on our behalf.  It would be quite
+     * easy for a user to use those variables while null (if not set now).
      */
     public function new() {
         mouseX = 0;
         mouseY = 0;
     }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // User-implemented Methods
+    
+    public function setup() { }
+    public function draw() { }
+    public function mousePressed() { }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Setup Methods
     
     public function init() {
         setup();
@@ -80,13 +101,6 @@ class Applet {
             draw();
         }
     }
-    
-    public function setup() { }
-    public function draw() { }
-    public function mousePressed() { }
-    
-    ////////////////////////////////////////////////////////////////////////////
-    // Setup Methods
     
     /**
      * Initializes this Applet with a new graphics layer of the given size.  If
@@ -120,6 +134,7 @@ class Applet {
 
     ////////////////////////////////////////////////////////////////////////////
     // Color Methods
+    
     public function fill(red:Int, ?green:Int, ?blue:Int, ?alpha:Int) {
         var color:Color = Color.resolve(red, green, blue, alpha);
         graphics.fill(color);
@@ -138,17 +153,20 @@ class Applet {
         graphics.stroke(Color.NONE);
     }
     
-    public function point(x:Float, y:Float, ?z:Float) {
-        graphics.point(new Vertex(x, y, z));
+    public function background(red:Int, ?green:Int, ?blue:Int, ?alpha:Int) {
+        var color:Color = Color.resolve(red, green, blue, alpha);
+        graphics.background(color);
     }
-    
     
     ////////////////////////////////////////////////////////////////////////////
     // Drawing Methods
     
-    public function background(red:Int, ?green:Int, ?blue:Int, ?alpha:Int) {
-        var color:Color = Color.resolve(red, green, blue, alpha);
-        graphics.background(color);
+    public function rectMode(mode:ShapeMode) {
+        graphics.rectMode(mode);
+    }
+    
+    public function ellipseMode(mode:ShapeMode) {
+        graphics.ellipseMode(mode);
     }
     
     public function rect(x1:Float, y1:Float, x2:Float, y2:Float) {
@@ -180,10 +198,14 @@ class Applet {
     public function triangle(x1:Float, y1:Float,
                              x2:Float, y2:Float,
                              x3:Float, y3:Float) {
-                             
+    
         graphics.triangle(new Vertex(x1, y1),
                           new Vertex(x2, y2),
                           new Vertex(x3, y3));
+    }
+    
+    public function point(x:Float, y:Float, ?z:Float) {
+        graphics.point(new Vertex(x, y, z));
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -212,16 +234,9 @@ class Applet {
     }
     
     ////////////////////////////////////////////////////////////////////////////
-    // Drawing Methods
-    
-    public function rectMode(mode:ShapeMode) {
-        graphics.rectMode(mode);
-    }
-    
-    ////////////////////////////////////////////////////////////////////////////
     // Utility Methods
     /**
-     * @todo inline/static
+     * TODO: inline/static Applet util methods
      */
      
     public function random(?low:Float, ?high:Float) : Float {

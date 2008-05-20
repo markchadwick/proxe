@@ -155,7 +155,6 @@ class Graphics {
      * Clears the current drawing surface, and fills it solidly with the given
      * color.
      *
-     * @todo Might have to shuffle that rect
      */
     public function background(color:Color) {
         backgroundColor = color;
@@ -314,6 +313,10 @@ class Graphics {
     
     public function rectMode(mode:ShapeMode) {
         this.currentRectMode = mode;
+    }
+    
+    public function ellipseMode(mode:ShapeMode) {
+        this.currentEllipseMode = mode;
     }
     
     
