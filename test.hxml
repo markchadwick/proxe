@@ -1,0 +1,5 @@
+-cp src
+-cp test
+-neko test/test.n
+-main ProxeTests
+-cmd neko test/test.n
