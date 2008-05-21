@@ -13,7 +13,7 @@ package proxe;
  */
 enum ColorMode {
     RGB;
-    HSB;
+    HSV;
 }
 
 /**
@@ -56,10 +56,10 @@ class Color {
         /*
          * Set Range Bounds
          */
-        maxR = (maxR == null)? 255 : (maxR < 0)? 0 : maxR;
-        maxG = (maxG == null)? 255 : (maxG < 0)? 0 : maxG;
-        maxB = (maxB == null)? 255 : (maxB < 0)? 0 : maxB;
-        maxA = (maxA == null)? 255 : (maxA < 0)? 0 : maxA;
+        maxR = (maxR == null)? 255 : (maxR < 1)? 1 : maxR;
+        maxG = (maxG == null)? 255 : (maxG < 1)? 1 : maxG;
+        maxB = (maxB == null)? 255 : (maxB < 1)? 1 : maxB;
+        maxA = (maxA == null)? 255 : (maxA < 1)? 1 : maxA;
         
         /*
          * Set Channel Bounds
@@ -90,7 +90,12 @@ class Color {
      * TODO:  Implement ColorMode
      * @return an instantiated Color based on the passed parameters
      */
-    public static function resolve(r:Float, ?g:Float, ?b:Float, ?a:Float) : Color {
+    public static function resolve(r:Float, ?g:Float, ?b:Float, ?a:Float,
+                                   ?mode:ColorMode) : Color {
+        if(mode == HSV) {
+            trace("HSV!  We're in trouble!");
+        }
+        
         if(a == null) {
             if(b == null) {
                 if(g == null) {
@@ -134,6 +139,74 @@ class Color {
      */
     public function toString() : String {
         return "<Color: r:"+ red +" g:"+ green +" b:"+ blue +" a:"+ alpha +">";
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Private Methods
+    
+    private function rgbToHsv(r:Float, g:Float, b:Float) {
+        var max:Float = Math.max(r, Math.max(g, b));
+        var min:Float = Math.min(r, Math.min(g, b));
+        var delta:Float = max - min;
+    
+        var h:Float = 0;
+        var s:Float = 0;
+        var v:Float = max;
+        
+        if(v != 0) {
+            s = delta/max;
+        }
+        
+        if(s != 0) {
+            switch(max) {
+                case r:     h = (g-b)/delta;
+                case g:     h = 2 + (b-r) / delta;
+                case b:     h = 4 + (r-g) / delta;
+            }
+        }
+        
+        h *= 60;
+        h %= 360;
+    }
+    
+    private function hsvToRgb(h:Float, s:Float, v:Float) {
+// 	def hsv2rgb(hsv):
+//        h, s, v = hsv
+//        if s == 0:
+//          return v, v, v
+//
+//        h = h/60
+//        i =  floor( h )
+//        f = h - i
+//        p = v * ( 1 - s )
+//        q = v * ( 1 - s * f )
+//        t = v * ( 1 - s * ( 1 - f ) )
+//
+//        if i == 0:
+//          r = v
+//          g = t
+//          b = p
+//        elif i == 1:
+//          r = q
+//          g = v
+//          b = p
+//        elif i == 2:
+//          r = p
+//          g = v
+//          b = t
+//        elif i == 3:
+//          r = p
+//          g = q
+//          b = v
+//        elif i == 4:
+//          r = t
+//          g = p
+//          b = v
+//        else:
+//          r = v
+//          g = p
+//          b = q
+//        return  r, g, b
     }
 
 }
