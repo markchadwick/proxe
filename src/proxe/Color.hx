@@ -37,21 +37,45 @@ class Color {
     public static var NONE:Color = new Color(-1, -1, -1, -1);
 
     /**
-     * Create a new color based on the 1-255 RGBA values.  This assumes sane
-     * values are passed in.  So, if a red channel with a value of 1000 (where
-     * the actual maximum is 255) is passed, it will happily store a color with
-     * the red channel with an intensity of 255.
+     * TODO: Fix docs
+     *  used to talk about fixed vals and ranges
      *
-     * @param red   Red channel (1-255)
-     * @param green Green channel (1-255)
-     * @param blue  Blue channel (1-255)
+     * @param red   Red/Hue channel (1-255)
+     * @param green Green/Saturation channel (1-255)
+     * @param blue  Blue/Value channel (1-255)
      * @param alpha Alpha channel (1-255);
+     *
+     * @param maxR (optional) maximum primary channel value
+     * @param maxG (optional) maximum seconary channel value
+     * @param maxB (optional) maximum tertiary channel
+     * @param maxA (optional) maximum quaternary channel
      */
-    public function new(red:Int, green:Int, blue:Int, alpha:Int) {
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
-        this.alpha = alpha;
+    public function new(red:Float, green:Float, blue:Float, alpha:Float,
+                        ?maxR:Float, ?maxG:Float, ?maxB:Float, ?maxA:Float) {
+    
+        /*
+         * Set Range Bounds
+         */
+        maxR = (maxR == null)? 255 : (maxR < 0)? 0 : maxR;
+        maxG = (maxG == null)? 255 : (maxG < 0)? 0 : maxG;
+        maxB = (maxB == null)? 255 : (maxB < 0)? 0 : maxB;
+        maxA = (maxA == null)? 255 : (maxA < 0)? 0 : maxA;
+        
+        /*
+         * Set Channel Bounds
+         */
+        red     = (red > maxR)  ? maxR : (red < 0)?   0 : red;
+        green   = (green > maxG)? maxG : (green < 0)? 0 : green;
+        blue    = (blue > maxB) ? maxB : (blue < 0)?  0 : blue;
+        alpha   = (alpha > maxA)? maxA : (alpha < 0)? 0 : alpha;
+        
+        /*
+         * Set values
+         */
+        this.red = Math.floor(red/maxR*255);
+        this.green = Math.floor(green/maxG*255);
+        this.blue = Math.floor(blue/maxB*255);
+        this.alpha = Math.floor(alpha/maxA*255);
     }
     
     /**
@@ -63,10 +87,10 @@ class Color {
      *  resolveColor(red, green, blue)
      *  resolveColor(red, green, blue, alpha)
      *
-     * TODO:  Implement ColorMode, and channel ranges
+     * TODO:  Implement ColorMode
      * @return an instantiated Color based on the passed parameters
      */
-    public static function resolve(r:Int, ?g:Int, ?b:Int, ?a:Int) : Color {
+    public static function resolve(r:Float, ?g:Float, ?b:Float, ?a:Float) : Color {
         if(a == null) {
             if(b == null) {
                 if(g == null) {
