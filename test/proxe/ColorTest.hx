@@ -77,15 +77,15 @@ class ColorTest extends TestCase {
         
         var color = Color.resolve(255, 255, 255, HSV);
         assertEquals(255, color.red);
-        assertEquals(0, color.green);
+        assertEquals(255, color.green);
         assertEquals(255, color.blue);
         assertEquals(255, color.alpha);
     }
     
     public function testResolveHSVColor() {
-        var color = Color.resolve(10, 20, 255, 255, HSV);
+        var color = Color.resolve(0, 0, 255, 255, HSV);
         assertEquals(255, color.red);
-        assertEquals(0,   color.green);
+        assertEquals(255, color.green);
         assertEquals(255, color.blue);
         assertEquals(255, color.alpha);
         
@@ -93,6 +93,6 @@ class ColorTest extends TestCase {
         assertEquals(0, color.red);
         assertEquals(0, color.green);
         assertEquals(0, color.blue);
-        assertEquals(0, color.alpha);
+        assertEquals(255, color.alpha);
     }
 }

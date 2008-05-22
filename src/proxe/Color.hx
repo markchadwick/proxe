@@ -159,21 +159,27 @@ class Color {
     }
     
     private static function hsvToRgb(h:Float, s:Float, v:Float) : Array<Float> {
-        h = (h/255) * 360;
-    
+        h =  (h/255) * 360;
+        s /= 255;
+        v /= 255;
+        
         var r:Float = 0;
         var g:Float = 0;
         var b:Float = 0;
         
         if(s == 0) {
             var rgb = new Array<Float>();
-            rgb[0] = r;
-            rgb[1] = g;
-            rgb[2] = b;
+            rgb[0] = v * 255;
+            rgb[1] = v * 255;
+            rgb[2] = v * 255;
             return rgb;
         }
         
-        h /= 60;
+        if(h == 360) {
+            h = 0;
+        } else {
+            h /= 60;
+        }
         
         var i:Int = Math.floor(h);
         var f = h - i;
@@ -183,37 +189,31 @@ class Color {
 
         switch(i) {
             case 0:
-                trace("Case 0");
                 r = v;
                 g = t;
                 b = p;
                 
             case 1:
-                trace("Case 1");
                 r = q;
                 g = v;
                 b = p;
             
             case 2:
-                trace("Case 2");
                 r = p;
                 g = v;
                 b = t;
                 
             case 3:
-                trace("Case 3");
                 r = p;
                 g = q;
                 b = v;
                 
             case 4:
-                trace("Case 4");
                 r = t;
                 g = p;
                 b = v;
             
             default:
-                trace("Case default");
                 r = v;
                 g = p;
                 b = q;
