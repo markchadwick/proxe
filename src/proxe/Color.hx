@@ -33,6 +33,8 @@ class Color {
      * will have the same effect as `noFill()`.  As negative numbers are
      * generally not valid intensity values, passing this value directly to
      * an external (non-Proxe) graphics object is not recomended.
+     *
+     * TODO: Current bounds checks make this black, not non-valid.
      */
     public static var NONE:Color = new Color(-1, -1, -1, -1);
 
@@ -52,7 +54,7 @@ class Color {
      */
     public function new(red:Float, green:Float, blue:Float, alpha:Float,
                         ?maxR:Float, ?maxG:Float, ?maxB:Float, ?maxA:Float) {
-    
+
         /*
          * Set Range Bounds
          */
@@ -91,21 +93,28 @@ class Color {
      * @return an instantiated Color based on the passed parameters
      */
     public static function resolve(r:Float, ?g:Float, ?b:Float, ?a:Float,
-                                   ?mode:ColorMode) : Color {
-        if(mode == HSV) {
-            trace("HSV!  We're in trouble!");
-        }
-        
+                                   ?colorMode:ColorMode) : Color {
         if(a == null) {
             if(b == null) {
                 if(g == null) {
-                    return new Color(r, r, r, 255);
+                    g = r;
+                    b = r;
+                    a = 255;
+                } else {
+                    a = g;
+                    g = r;
+                    b = r;
                 }
-                return new Color(r, r, r, g);
+            } else {
+                a = 255;
             }
-            return new Color(r, g, b, 255);
         }
-        return new Color(r, g, b, a);
+        
+        if(colorMode == RGB || colorMode == null) {
+            return new Color(r, g, b, a);
+        } else {
+            return resolveHSV(r, g, b, a);
+        }
     }
 
     /**
@@ -144,7 +153,80 @@ class Color {
     ////////////////////////////////////////////////////////////////////////////
     // Private Methods
     
-    private function rgbToHsv(r:Float, g:Float, b:Float) {
+    private static function resolveHSV(h:Float, s:Float, v:Float, a:Float) : Color {
+        var rgb:Array<Float> = hsvToRgb(h, s, v);
+        return new Color(rgb[0], rgb[1], rgb[2], a);
+    }
+    
+    private static function hsvToRgb(h:Float, s:Float, v:Float) : Array<Float> {
+        h = (h/255) * 360;
+    
+        var r:Float = 0;
+        var g:Float = 0;
+        var b:Float = 0;
+        
+        if(s == 0) {
+            var rgb = new Array<Float>();
+            rgb[0] = r;
+            rgb[1] = g;
+            rgb[2] = b;
+            return rgb;
+        }
+        
+        h /= 60;
+        
+        var i:Int = Math.floor(h);
+        var f = h - i;
+        var p = v * (1 - s);
+        var q = v * (1 - s * f);
+        var t = v * (1 - s * (1 -f));
+
+        switch(i) {
+            case 0:
+                trace("Case 0");
+                r = v;
+                g = t;
+                b = p;
+                
+            case 1:
+                trace("Case 1");
+                r = q;
+                g = v;
+                b = p;
+            
+            case 2:
+                trace("Case 2");
+                r = p;
+                g = v;
+                b = t;
+                
+            case 3:
+                trace("Case 3");
+                r = p;
+                g = q;
+                b = v;
+                
+            case 4:
+                trace("Case 4");
+                r = t;
+                g = p;
+                b = v;
+            
+            default:
+                trace("Case default");
+                r = v;
+                g = p;
+                b = q;
+        }
+        
+        var rgb = new Array<Float>();
+        rgb[0] = r * 255;
+        rgb[1] = g * 255;
+        rgb[2] = b * 255;
+        return rgb;
+    }
+
+    private static function rgbToHsv(r:Float, g:Float, b:Float) {
         var max:Float = Math.max(r, Math.max(g, b));
         var min:Float = Math.min(r, Math.min(g, b));
         var delta:Float = max - min;
@@ -167,46 +249,6 @@ class Color {
         
         h *= 60;
         h %= 360;
-    }
-    
-    private function hsvToRgb(h:Float, s:Float, v:Float) {
-// 	def hsv2rgb(hsv):
-//        h, s, v = hsv
-//        if s == 0:
-//          return v, v, v
-//
-//        h = h/60
-//        i =  floor( h )
-//        f = h - i
-//        p = v * ( 1 - s )
-//        q = v * ( 1 - s * f )
-//        t = v * ( 1 - s * ( 1 - f ) )
-//
-//        if i == 0:
-//          r = v
-//          g = t
-//          b = p
-//        elif i == 1:
-//          r = q
-//          g = v
-//          b = p
-//        elif i == 2:
-//          r = p
-//          g = v
-//          b = t
-//        elif i == 3:
-//          r = p
-//          g = q
-//          b = v
-//        elif i == 4:
-//          r = t
-//          g = p
-//          b = v
-//        else:
-//          r = v
-//          g = p
-//          b = q
-//        return  r, g, b
     }
 
 }

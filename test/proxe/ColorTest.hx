@@ -5,7 +5,7 @@ import haxe.unit.TestCase;
 import proxe.Color;
 
 class ColorTest extends TestCase {
-    ////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////
     // Constructor Tests
 
     public function testConstructorColorBoundries() {
@@ -45,13 +45,13 @@ class ColorTest extends TestCase {
         assertEquals(200, color.red);
         assertEquals(200, color.green);
         assertEquals(200, color.blue);
-        assertEquals(50, color.alpha);
+        assertEquals(50,  color.alpha);
     }
     
     public function testResolveThreeParams() {
         var color = Color.resolve(10, 100, 200);
         
-        assertEquals(10, color.red);
+        assertEquals(10,  color.red);
         assertEquals(100, color.green);
         assertEquals(200, color.blue);
         assertEquals(255, color.alpha);
@@ -75,9 +75,9 @@ class ColorTest extends TestCase {
         assertEquals(0, color.blue);
         assertEquals(0, color.alpha);
         
-        var color = Color.resolve(255, 255, 255, 255, HSV);
+        var color = Color.resolve(255, 255, 255, HSV);
         assertEquals(255, color.red);
-        assertEquals(255, color.green);
+        assertEquals(0, color.green);
         assertEquals(255, color.blue);
         assertEquals(255, color.alpha);
     }
@@ -85,7 +85,7 @@ class ColorTest extends TestCase {
     public function testResolveHSVColor() {
         var color = Color.resolve(10, 20, 255, 255, HSV);
         assertEquals(255, color.red);
-        assertEquals(255, color.green);
+        assertEquals(0,   color.green);
         assertEquals(255, color.blue);
         assertEquals(255, color.alpha);
         
