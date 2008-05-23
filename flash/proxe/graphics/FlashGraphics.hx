@@ -98,7 +98,7 @@ class FlashGraphics extends Graphics {
         fillColor = oldFill;
         strokeColor = oldStroke;
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////
     // Event Binding
 

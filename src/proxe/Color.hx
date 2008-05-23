@@ -52,32 +52,11 @@ class Color {
      * @param maxB (optional) maximum tertiary channel
      * @param maxA (optional) maximum quaternary channel
      */
-    public function new(red:Float, green:Float, blue:Float, alpha:Float,
-                        ?maxR:Float, ?maxG:Float, ?maxB:Float, ?maxA:Float) {
-
-        /*
-         * Set Range Bounds
-         */
-        maxR = (maxR == null)? 255 : (maxR < 1)? 1 : maxR;
-        maxG = (maxG == null)? 255 : (maxG < 1)? 1 : maxG;
-        maxB = (maxB == null)? 255 : (maxB < 1)? 1 : maxB;
-        maxA = (maxA == null)? 255 : (maxA < 1)? 1 : maxA;
-        
-        /*
-         * Set Channel Bounds
-         */
-        red     = (red > maxR)  ? maxR : (red < 0)?   0 : red;
-        green   = (green > maxG)? maxG : (green < 0)? 0 : green;
-        blue    = (blue > maxB) ? maxB : (blue < 0)?  0 : blue;
-        alpha   = (alpha > maxA)? maxA : (alpha < 0)? 0 : alpha;
-        
-        /*
-         * Set values
-         */
-        this.red = Math.floor(red/maxR*255);
-        this.green = Math.floor(green/maxG*255);
-        this.blue = Math.floor(blue/maxB*255);
-        this.alpha = Math.floor(alpha/maxA*255);
+    public function new(red:Float, green:Float, blue:Float, alpha:Float) {
+        this.red = Math.floor(red);
+        this.green = Math.floor(green);
+        this.blue = Math.floor(blue);
+        this.alpha = Math.floor(alpha);
     }
     
     /**
@@ -93,22 +72,53 @@ class Color {
      * @return an instantiated Color based on the passed parameters
      */
     public static function resolve(r:Float, ?g:Float, ?b:Float, ?a:Float,
-                                   ?colorMode:ColorMode) : Color {
+                                   ?colorMode:ColorMode, ?maxR:Float,
+                                   ?maxG:Float, ?maxB:Float, ?maxA:Float) : Color {
+        
+        colorMode = (colorMode == null)? RGB : colorMode;
+        
+        /*
+         * Set Range Bounds
+         */
+        maxR = (maxR == null)? 255 : (maxR < 1)? 1 : maxR;
+        maxG = (maxG == null)? 255 : (maxG < 1)? 1 : maxG;
+        maxB = (maxB == null)? 255 : (maxB < 1)? 1 : maxB;
+        maxA = (maxA == null)? 255 : (maxA < 1)? 1 : maxA;
+        
+        /*
+         * Reconstruct parameters
+         */
         if(a == null) {
             if(b == null) {
                 if(g == null) {
                     g = r;
                     b = r;
-                    a = 255;
+                    a = maxA;
                 } else {
                     a = g;
                     g = r;
                     b = r;
                 }
             } else {
-                a = 255;
+                a = maxA;
             }
         }
+        
+        /*
+         * Set Channel Bounds
+         */
+        r = (r > maxR)? maxR : (r < 0)? 0 : r;
+        g = (g > maxG)? maxG : (g < 0)? 0 : g;
+        b = (b > maxB)? maxB : (b < 0)? 0 : b;
+        a = (a > maxA)? maxA : (a < 0)? 0 : a;
+        
+        /*
+         * Normalize
+         */
+        r = (r/maxR) * 255;
+        g = (g/maxG) * 255;
+        b = (b/maxB) * 255;
+        a = (a/maxA) * 255;
         
         if(colorMode == RGB || colorMode == null) {
             return new Color(r, g, b, a);

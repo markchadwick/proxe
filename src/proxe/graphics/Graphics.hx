@@ -3,6 +3,7 @@ package proxe.graphics;
 import proxe.Applet;
 import proxe.Color;
 import proxe.Vertex;
+import proxe.graphics.shape.Curve;
 
 class Graphics {
 
@@ -47,7 +48,12 @@ class Graphics {
     public var fillColor:Color;
     public var strokeColor:Color;
     public var strokeWidth:Float;
-
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Private Fields
+    
+    private var curve:Curve;
+    
     
     ////////////////////////////////////////////////////////////////////////////
     // Abstract Methods
@@ -129,7 +135,7 @@ class Graphics {
     }
 
     public function curveVertex(v:Vertex) {
-        splineVertex(v, false);
+        curve.splineVertex(v, false);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -146,6 +152,8 @@ class Graphics {
         fillColor = Color.resolve(255);
         strokeColor = Color.resolve(0);
         looping = true;
+
+        curve = new Curve(this);
     }
     
     ////////////////////////////////////////////////////////////////////////////
@@ -352,9 +360,4 @@ class Graphics {
         }
         endShape(CLOSE);
     }
-    
-    private function splineVertex(v:Vertex, bezier:Bool) {
-        vertex(v);
-    }
-
 }

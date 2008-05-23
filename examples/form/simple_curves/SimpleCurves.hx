@@ -1,4 +1,5 @@
 import proxe.Applet;
+import proxe.Color;
 
 class SimpleCurves extends Applet {
 
@@ -6,7 +7,7 @@ class SimpleCurves extends Applet {
 
     public function setup() {
         size(200, 200);
-//        colorMode(RGB, 100);
+        colorMode(RGB, 100);
         background(0);
         noFill();
         noLoop();

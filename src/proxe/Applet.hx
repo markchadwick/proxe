@@ -67,6 +67,12 @@ class Applet {
     public var mouseX:Float;
     public var mouseY:Float;
     
+    public var currentColorMode:ColorMode;
+    public var maxR:Float;
+    public var maxG:Float;
+    public var maxB:Float;
+    public var maxA:Float;
+    
     ////////////////////////////////////////////////////////////////////////////
     // Constructor
     
@@ -80,6 +86,12 @@ class Applet {
     public function new() {
         mouseX = 0;
         mouseY = 0;
+        
+        currentColorMode = RGB;
+        maxR = 255;
+        maxG = 255;
+        maxB = 255;
+        maxA = 255;
     }
     
     ////////////////////////////////////////////////////////////////////////////
@@ -136,7 +148,8 @@ class Applet {
     // Color Methods
     
     public function fill(red:Int, ?green:Int, ?blue:Int, ?alpha:Int) {
-        var color:Color = Color.resolve(red, green, blue, alpha);
+        var color:Color = Color.resolve(red, green, blue, alpha,
+                            currentColorMode, maxR, maxG, maxB, maxA);
         graphics.fill(color);
     }
     
@@ -145,7 +158,8 @@ class Applet {
     }
     
     public function stroke(red:Int, ?green:Int, ?blue:Int, ?alpha:Int) {
-        var color:Color = Color.resolve(red, green, blue, alpha);
+        var color:Color = Color.resolve(red, green, blue, alpha,
+                            currentColorMode, maxR, maxG, maxB, maxA);
         graphics.stroke(color);
     }
     
@@ -154,8 +168,25 @@ class Applet {
     }
     
     public function background(red:Int, ?green:Int, ?blue:Int, ?alpha:Int) {
-        var color:Color = Color.resolve(red, green, blue, alpha);
+        var color:Color = Color.resolve(red, green, blue, alpha,
+                            currentColorMode, maxR, maxG, maxB, maxA);
         graphics.background(color);
+    }
+    
+    public function colorMode(mode:ColorMode, ?maxR:Float, ?maxG:Float,
+                                ?maxB:Float, ?maxA:Float) {
+        this.currentColorMode = mode;
+        if(maxA == null) {
+            if(maxB == null) {
+                if(maxG == null) {
+                    if(maxR != null) {
+                        this.maxR = maxR;
+                        this.maxG = maxR;
+                        this.maxB = maxR;
+                    }
+                }
+            }
+        }
     }
     
     ////////////////////////////////////////////////////////////////////////////
